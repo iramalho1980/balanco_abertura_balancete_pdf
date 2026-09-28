@@ -1,0 +1,1415 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#182848">
+  <title>Implantação de Saldos Iniciais · Implanta Saldo - Simples Nacional</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #182848;
+      --blue: #4b6cb7;
+      --orange: darkorange;
+      --glass: rgba(255,255,255,.105);
+      --glass-strong: rgba(255,255,255,.15);
+      --line: rgba(255,255,255,.17);
+      --muted: rgba(239,244,255,.68);
+      --text: #f8faff;
+      --shadow: 0 24px 80px rgba(7,16,39,.30);
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--text);
+      background: #606c88;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #3f4c6b, #606c88);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      font-family: Verdana, Geneva, sans-serif;
+      overflow-x: hidden;
+    }
+    body::before, body::after { content:""; position:fixed; z-index:0; pointer-events:none; border-radius:50%; filter:blur(2px); }
+    body::before { width:390px;height:390px;top:-130px;right:4vw;background:radial-gradient(circle at 35% 35%,rgba(255,140,0,.47),rgba(255,140,0,.08) 55%,transparent 72%); }
+    body::after { width:510px;height:510px;bottom:-220px;left:-170px;background:radial-gradient(circle at 55% 45%,rgba(105,154,255,.42),rgba(105,154,255,.05) 62%,transparent 74%); }
+    button, input, select { font: inherit; }
+    button { cursor:pointer; }
+    .page { position:relative; z-index:1; width:min(1380px,calc(100% - 36px)); margin:0 auto; padding:42px 0 56px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:31px; }
+    .brand { display:flex; align-items:center; gap:12px; letter-spacing:.01em; font-family:Ubuntu,Arial,sans-serif; font-weight:300; }
+    .brandmark { display:grid; place-items:center; width:39px;height:39px;border-radius:13px; background:linear-gradient(145deg,rgba(255,140,0,.98),rgba(255,179,71,.84)); color:#202b40; box-shadow:0 8px 26px rgba(255,140,0,.25); }
+    .brandmark svg { width:21px;height:21px; }
+    .privacy { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px; letter-spacing:.02em; }
+    .privacy-dot { width:7px;height:7px;border-radius:50%;background:#75e0b0; box-shadow:0 0 12px rgba(117,224,176,.8); }
+    .hero { display:grid; grid-template-columns:1.17fr .83fr; gap:30px; align-items:end; margin:28px 0 28px; }
+    .hero-blob { position:relative; overflow:hidden; padding:32px 34px; border-radius:30px; background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.065)); }
+    .hero-blob::after { content:""; position:absolute; width:280px; height:280px; top:-170px; right:16%; pointer-events:none; border-radius:50%; background:radial-gradient(circle,rgba(255,166,57,.22),rgba(255,166,57,.04) 58%,transparent 72%); }
+    .hero-blob > * { position:relative; z-index:1; }
+    .title-blob { display:block; width:fit-content; max-width:100%; margin-top:4px; padding:13px 19px 15px; border-radius:22px; }
+    .eyebrow { display:flex; align-items:center; gap:9px; color:#ffbd70; text-transform:uppercase; letter-spacing:.17em; font-size:10px; font-weight:800; margin-bottom:13px; }
+    .eyebrow::before { content:""; width:24px;height:1px;background:var(--orange); }
+    h1 { margin:0; max-width:100%; font-family:Ubuntu,Arial,sans-serif; font-size:clamp(22px,5vw,59px); letter-spacing:-.05em; line-height:1.02; font-weight:300; white-space:nowrap; }
+    h1 span { color:#ffad45; }
+    .intro { max-width:590px; margin:16px 0 0; color:var(--muted); line-height:1.65; font-size:14px; }
+    .hero-note { justify-self:end; max-width:300px; padding:16px 18px; border-left:2px solid var(--orange); color:rgba(246,248,255,.75); font-size:12px; line-height:1.6; }
+    .glass { background:linear-gradient(135deg,rgba(255,255,255,.145),rgba(255,255,255,.065)); border:1px solid var(--line); box-shadow:var(--shadow); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px); }
+    .upload-panel { display:flex; align-items:center; gap:18px; padding:17px; border-radius:22px; transition:.2s ease; }
+    .upload-panel.drag { border-color:rgba(255,166,57,.85); background:rgba(255,140,0,.12); transform:translateY(-2px); }
+    .upload-icon { flex:0 0 52px; width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:rgba(255,140,0,.15);color:#ffad45; }
+    .upload-icon svg { width:24px;height:24px; }
+    .upload-copy { flex:1; min-width:0; }
+    .upload-copy strong { display:block; font-size:14px; margin-bottom:4px; }
+    .upload-copy span { color:var(--muted); font-size:12px; }
+    .upload-actions { display:flex; gap:9px; align-items:center; }
+    .btn { border:1px solid transparent; border-radius:12px; padding:11px 15px; font-size:12px; font-weight:750; transition:.18s ease; white-space:nowrap; }
+    .btn-primary { background:linear-gradient(135deg,#ff9f2f,#ff7a00); color:#18243b; box-shadow:0 8px 24px rgba(255,140,0,.23); }
+    .btn-primary:hover { filter:brightness(1.08); transform:translateY(-1px); }
+    .btn-ghost { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.15); color:#f7f8ff; }
+    .btn-ghost:hover { background:rgba(255,255,255,.14); }
+    .btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+    #fileInput,#planFileInput { display:none; }
+    .statusline { min-height:22px; padding:8px 4px 0; color:var(--muted); font-size:11px; }
+    .statusline.error { color:#ffc0a8; }
+    .summary { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:20px 0 14px; }
+    .stat { padding:16px 18px; border-radius:17px; }
+    .stat-label { color:var(--muted); text-transform:uppercase; letter-spacing:.12em; font-size:9px; font-weight:800; }
+    .stat-value { margin-top:8px; font-size:20px; font-weight:720; letter-spacing:-.025em; }
+    .stat-value.accent { color:#ffb457; }
+    .table-card { overflow:hidden; border-radius:22px; }
+    .table-card.collapsed > :not(.table-head) { display:none; }
+    .table-card.collapsed .table-tools { display:none; }
+    .table-card.collapsed .table-head { border-bottom:0; }
+    .table-head-title { display:flex; align-items:center; gap:10px; min-width:0; }
+    .table-head-title > span:last-child { display:block; min-width:0; }
+    .table-collapse-toggle { display:flex; align-items:center; gap:10px; padding:0; border:0; color:inherit; background:transparent; text-align:left; }
+    .table-collapse-toggle:hover .table-title { color:#ffd09b; }
+    .table-collapse-toggle svg { flex:0 0 auto; width:18px; height:18px; color:#ffb457; transition:transform .18s ease; }
+    .table-card.collapsed .table-collapse-toggle svg { transform:rotate(-90deg); }
+    .table-head { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:18px 20px; border-bottom:1px solid rgba(255,255,255,.12); }
+    .table-title { font-family:Ubuntu,Arial,sans-serif; font-weight:300; font-size:17px; }
+    .table-subtitle { display:block; color:var(--muted); font-size:11px; margin-top:4px; }
+    .table-tools { display:flex; align-items:center; gap:9px; }
+    .search { width:190px; border:1px solid rgba(255,255,255,.15); border-radius:10px; padding:9px 11px; outline:0; color:white; background:rgba(12,24,48,.18); font-size:11px; }
+    .search::placeholder { color:rgba(240,244,255,.48); }
+    .search:focus { border-color:rgba(255,165,53,.7); }
+    .table-wrap { overflow:auto; max-height:480px; }
+    table { width:100%; border-collapse:collapse; min-width:1250px; }
+    thead { position:sticky;top:0;z-index:1;background:rgba(25,42,76,.88);backdrop-filter:blur(12px); }
+    th { position:relative; padding:10px 28px 10px 17px; color:rgba(240,244,255,.62); text-align:left; text-transform:uppercase; letter-spacing:.11em; font-size:9px; font-weight:800; white-space:nowrap; }
+    .filterable-header { vertical-align:middle; }
+    .filterable-header > span { display:inline-block; overflow:hidden; max-width:calc(100% - 3px); vertical-align:middle; text-overflow:ellipsis; }
+    .column-filter-trigger { position:absolute; top:50%; right:7px; display:grid; place-items:center; width:20px; height:20px; padding:0; border:1px solid transparent; border-radius:6px; color:rgba(240,244,255,.62); background:transparent; transform:translateY(-50%); }
+    .column-filter-trigger:hover,.column-filter-trigger.active { border-color:rgba(255,166,57,.52); color:#ffd09b; background:rgba(255,140,0,.13); }
+    .column-filter-trigger svg { width:12px; height:12px; }
+    .column-resizer { position:absolute; top:0; right:-3px; z-index:2; width:7px; height:100%; cursor:col-resize; }
+    .column-resizer::after { content:""; position:absolute; top:25%; bottom:25%; left:3px; width:1px; background:rgba(255,255,255,.12); transition:.15s ease; }
+    .column-resizer:hover::after,.column-resizer.dragging::after { width:2px; background:#ffb457; box-shadow:0 0 8px rgba(255,180,87,.65); }
+    td { padding:12px 17px; border-top:1px solid rgba(255,255,255,.075); font-size:12px; color:rgba(250,251,255,.9); }
+    tbody tr:hover { background:rgba(255,255,255,.045); }
+    td.domain { color:rgba(240,244,255,.34); width:118px; }
+    td.code { font-variant-numeric:tabular-nums; color:#ffd09b; width:150px; }
+    td.description { max-width:520px; }
+    td.similarity { width:135px; white-space:nowrap; }
+    .similarity-widget { display:flex; align-items:center; gap:8px; min-width:108px; }
+    .similarity-track { width:48px; height:5px; overflow:hidden; border-radius:99px; background:rgba(255,255,255,.13); }
+    .similarity-fill { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#ff8c00,#ffd08a); }
+    .similarity-value { min-width:34px; color:#ffd09b; font-size:10px; font-variant-numeric:tabular-nums; }
+    .similarity-missing { color:rgba(240,244,255,.45); }
+    .review-legend { display:none; align-items:center; flex-wrap:wrap; gap:8px; padding:12px 18px; border-bottom:1px solid rgba(255,255,255,.1); }
+    .review-legend.visible { display:flex; }
+    .legend-intro { width:100%; color:rgba(245,247,255,.72); font-size:10px; line-height:1.5; }
+    .legend-chip { display:inline-flex; align-items:center; gap:7px; padding:6px 9px; border:1px solid rgba(255,255,255,.11); border-radius:999px; font-size:9px; }
+    .legend-chip::before { content:""; width:8px; height:8px; border-radius:50%; }
+    .legend-good { color:#d9ffe8; background:rgba(49,181,115,.14); }
+    .legend-good::before { background:#67e39b; }
+    .legend-review { color:#fff1c9; background:rgba(255,182,53,.14); }
+    .legend-review::before { background:#ffc85d; }
+    .legend-missing { color:#ffe0e0; background:rgba(235,78,78,.15); }
+    .legend-missing::before { background:#ff7777; }
+    tbody tr.row-related td { background:rgba(58,188,123,.15); border-top-color:rgba(98,235,159,.16); }
+    tbody tr.row-review td { background:rgba(255,183,44,.16); border-top-color:rgba(255,205,94,.18); }
+    tbody tr.row-missing td { background:rgba(232,73,73,.17); border-top-color:rgba(255,125,125,.19); }
+    tbody tr.row-related:hover td,tbody tr.row-review:hover td,tbody tr.row-missing:hover td { filter:brightness(1.12); }
+    td.relation-cell { min-width:150px; white-space:nowrap; }
+    .relation-control { display:inline-flex; align-items:center; gap:7px; color:rgba(248,250,255,.88); font-size:9px; cursor:pointer; }
+    .relation-control input { margin:0; accent-color:#63e29a; }
+    .relation-control input:disabled { opacity:.55; cursor:not-allowed; }
+    .relation-na { color:rgba(240,244,255,.4); }
+    td.amount { text-align:right; font-variant-numeric:tabular-nums; font-weight:680; white-space:nowrap; }
+    .cell-input { width:100%; min-width:54px; border:1px solid transparent; border-radius:7px; padding:6px 7px; outline:0; color:inherit; background:transparent; font:inherit; font-variant-numeric:tabular-nums; transition:.15s ease; }
+    .cell-input { cursor:text; }
+    .cell-input:hover { border-color:rgba(255,255,255,.14); background:rgba(255,255,255,.035); }
+    .cell-input:focus { border-color:rgba(255,166,57,.72); background:rgba(7,19,43,.28); box-shadow:0 0 0 2px rgba(255,140,0,.08); }
+    .cell-input.code-input { color:#ffd09b; }
+    .cell-input.amount-input { text-align:right; min-width:135px; }
+    .action-cell { width:48px; padding-left:8px; padding-right:12px; text-align:center; }
+    .delete-row { display:inline-grid; place-items:center; width:32px; height:32px; border:1px solid transparent; border-radius:9px; color:rgba(255,205,193,.74); background:transparent; transition:.16s ease; }
+    .delete-row:hover { color:#fff; border-color:rgba(255,113,87,.34); background:rgba(213,65,52,.18); }
+    .delete-row svg { width:16px; height:16px; }
+    .pagination { display:none; align-items:center; justify-content:space-between; gap:10px; padding:12px 17px; border-top:1px solid rgba(255,255,255,.09); color:var(--muted); font-size:10px; }
+    .pagination.visible { display:flex; }
+    .table-action-bar { display:flex; justify-content:center; align-items:center; gap:10px; margin:14px auto 15px; width:max-content; max-width:calc(100% - 28px); padding:8px 10px; border-radius:16px; background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(255,255,255,.055)); }
+    .icon-action { display:grid; place-items:center; width:40px; height:40px; border:1px solid rgba(255,255,255,.15); border-radius:12px; color:#f6f8ff; background:rgba(255,255,255,.07); transition:.18s ease; }
+    .icon-action:hover:not(:disabled),.icon-action:focus-visible { border-color:rgba(255,166,57,.7); color:#ffd09b; background:rgba(255,140,0,.14); outline:0; transform:translateY(-1px); }
+    .icon-action:disabled { opacity:.38; cursor:not-allowed; }
+    .icon-action svg { width:19px; height:19px; }
+    .page-nav { display:flex; align-items:center; gap:8px; }
+    .page-arrow { display:grid; place-items:center; width:34px; height:32px; border:1px solid rgba(255,255,255,.15); border-radius:9px; color:#f5f7ff; background:rgba(255,255,255,.06); transition:.15s ease; }
+    .page-arrow:hover:not(:disabled) { border-color:rgba(255,166,57,.5); color:#ffbd70; background:rgba(255,140,0,.09); }
+    .page-arrow:disabled { opacity:.35; cursor:not-allowed; }
+    .page-arrow svg { width:15px; height:15px; }
+    .page-indicator { min-width:66px; text-align:center; color:#f3f5ff; font-variant-numeric:tabular-nums; }
+    .empty { display:grid; place-items:center; min-height:210px; padding:28px; text-align:center; color:var(--muted); }
+    .empty-symbol { width:47px;height:47px;display:grid;place-items:center;border-radius:15px;margin:0 auto 12px;background:rgba(255,255,255,.07);color:#ffb457; }
+    .empty-symbol svg { width:22px;height:22px; }
+    .empty strong { display:block;color:#f4f6ff;font-size:13px;margin-bottom:6px; }
+    .empty p { margin:0; max-width:370px; font-size:11px; line-height:1.6; }
+    .footer { display:flex; justify-content:space-between; gap:12px; margin-top:17px; color:rgba(235,241,255,.5); font-size:10px; }
+    .footer a { color:rgba(255,190,113,.85); text-decoration:none; }
+    /* Modal */
+    .modal-backdrop { display:none; position:fixed; inset:0; z-index:10; padding:24px; overflow:auto; align-items:center; justify-content:center; background:rgba(6,13,29,.67); backdrop-filter:blur(10px); }
+    .modal-backdrop.open { display:grid; }
+    .modal { display:flex; flex-direction:column; width:min(820px,100%); max-height:calc(100vh - 48px); border-radius:24px; overflow:hidden; animation:pop .2s ease-out; }
+    #txtModalBackdrop { inset:0; width:100vw; min-height:100vh; align-items:center; justify-content:center; place-items:center; }
+    #txtModalBackdrop.open { display:grid !important; align-items:center !important; justify-content:center !important; place-items:center !important; }
+    #txtModalBackdrop > .txt-modal { align-self:center; justify-self:center; margin:0; }
+    .group-modal { width:min(790px,100%); }
+    .group-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .group-select { width:100%; border:1px solid rgba(255,255,255,.15); border-radius:9px; outline:0; color:#f7f8ff; background:#233c6b; padding:10px 11px; font-size:11px; }
+    .group-select option { color:#f7f8ff; background:#20365f; }
+    .plan-modal { width:min(900px,100%); }
+    .txt-modal { width:min(700px,100%); }
+    .txt-modal .modal-top { position:relative; justify-content:center; text-align:center; }
+    .txt-modal .modal-top > div { width:100%; max-width:590px; }
+    .txt-modal .modal-top .modal-desc { margin-left:auto; margin-right:auto; }
+    .txt-modal .modal-top .close { position:absolute; top:20px; right:24px; }
+    .validation-modal { width:min(680px,100%); }
+    .validation-summary { display:grid; gap:9px; }
+    .validation-state { padding:14px 15px; border:1px solid rgba(103,227,155,.28); border-radius:13px; color:#d9ffe8; background:rgba(49,181,115,.11); font-size:11px; line-height:1.55; }
+    .validation-state.has-errors { border-color:rgba(255,130,104,.35); color:#ffe4dc; background:rgba(232,84,65,.10); }
+    .validation-issue { padding:12px 13px; border:1px solid rgba(255,194,78,.28); border-left:3px solid #ffb457; border-radius:12px; background:rgba(255,180,40,.08); }
+    .validation-issue strong { display:block; margin-bottom:4px; color:#ffedc1; font-size:11px; }
+    .validation-issue p { margin:0; color:rgba(255,239,210,.76); font-size:10px; line-height:1.55; }
+    .adjustment-form { display:none; margin-top:11px; padding:13px; border:1px solid rgba(255,166,57,.34); border-radius:14px; background:linear-gradient(135deg,rgba(255,166,36,.12),rgba(255,166,36,.045)); }
+    .adjustment-form.visible { display:block; }
+    .adjustment-form-title { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; color:#ffdfb4; font-size:11px; font-weight:800; }
+    .adjustment-fields { display:grid; grid-template-columns:1.1fr .9fr 1fr; gap:9px; }
+    .adjustment-fields .wide { grid-column:span 2; }
+    .adjustment-input { width:100%; min-width:0; box-sizing:border-box; border:1px solid rgba(255,255,255,.16); border-radius:9px; outline:0; padding:10px 11px; color:#f7f8ff; background:rgba(7,19,43,.34); font:inherit; font-size:11px; }
+    .adjustment-input:focus { border-color:rgba(255,166,57,.74); box-shadow:0 0 0 2px rgba(255,140,0,.09); }
+    .adjustment-input::-webkit-calendar-picker-indicator { filter:invert(1); }
+    .adjustment-form-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
+    .column-filter-menu { position:fixed; z-index:30; width:230px; max-height:330px; overflow:auto; padding:10px; border:1px solid rgba(255,255,255,.2); border-radius:13px; background:rgba(24,42,76,.97); box-shadow:0 18px 45px rgba(3,10,27,.48); backdrop-filter:blur(18px); }
+    .column-filter-menu strong { display:block; margin:1px 2px 8px; color:#ffcf95; font-size:10px; }
+    .column-filter-search { width:100%; margin-bottom:7px; border:1px solid rgba(255,255,255,.15); border-radius:8px; padding:8px 9px; outline:0; color:#f7f8ff; background:rgba(7,19,43,.35); font-size:10px; }
+    .column-filter-search:focus { border-color:rgba(255,166,57,.7); }
+    .column-filter-actions { display:flex; gap:6px; margin-bottom:7px; }
+    .column-filter-action { flex:1; border:1px solid rgba(255,255,255,.13); border-radius:7px; padding:6px 5px; color:#f7f8ff; background:rgba(255,255,255,.06); font-size:9px; }
+    .column-filter-action:hover { border-color:rgba(255,166,57,.6); color:#ffd09b; }
+    .column-filter-values { display:grid; gap:3px; }
+    .column-filter-value { width:100%; overflow:hidden; border:1px solid transparent; border-radius:7px; padding:7px 8px; color:rgba(248,250,255,.85); background:transparent; text-align:left; text-overflow:ellipsis; white-space:nowrap; font-size:10px; }
+    .column-filter-value:hover,.column-filter-value.selected { border-color:rgba(255,166,57,.45); color:#ffdfb4; background:rgba(255,140,0,.12); }
+    .column-filter-empty { padding:8px; color:var(--muted); font-size:9px; }
+    .txt-layout-info { width:100%; margin-bottom:13px; padding:13px 15px; box-sizing:border-box; border:1px solid rgba(255,166,57,.26); border-left:3px solid var(--orange); border-radius:12px; background:rgba(255,140,0,.075); color:rgba(247,249,255,.82); font-size:10px; line-height:1.6; }
+    .txt-layout-info strong { display:block; margin-bottom:3px; color:#ffd09b; font-size:11px; }
+    .txt-layout-info a { color:#ffc37b; text-decoration:none; }
+    .txt-layout-info a:hover { text-decoration:underline; }
+    .txt-fields { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .txt-input { width:100%; box-sizing:border-box; border:1px solid rgba(255,255,255,.16); border-radius:9px; outline:0; padding:10px 11px; color:#f7f8ff; background:rgba(7,19,43,.34); font:inherit; font-size:11px; }
+    .txt-input:focus { border-color:rgba(255,166,57,.74); box-shadow:0 0 0 2px rgba(255,140,0,.09); }
+    .txt-input::-webkit-calendar-picker-indicator { filter:invert(1); }
+    .txt-preview { display:none; margin-top:12px; padding:12px 14px; border:1px solid rgba(255,255,255,.12); border-radius:12px; background:rgba(7,19,43,.18); color:rgba(244,247,255,.78); font-size:10px; line-height:1.6; white-space:pre-line; }
+    .txt-preview.warning { border-color:rgba(255,194,78,.35); background:rgba(255,180,40,.10); color:#ffedc1; }
+    .txt-preview.error { border-color:rgba(255,105,105,.38); background:rgba(231,66,66,.12); color:#ffe0e0; }
+    .table-wrap tr.balance-focus td { background:rgba(255,140,0,.17)!important; box-shadow:inset 0 1px rgba(255,166,57,.35),inset 0 -1px rgba(255,166,57,.35); }
+    .plan-select { width:100%; border:1px solid rgba(255,255,255,.15); border-radius:9px; outline:0; color:#f7f8ff; background:#233c6b; padding:10px 11px; font-size:11px; }
+    .plan-select option { color:#f7f8ff; background:#20365f; }
+    .plan-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .plan-mapping { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:11px; }
+    .plan-preview { width:100%; margin-top:14px; box-sizing:border-box; border:1px solid rgba(255,255,255,.12); border-radius:14px; overflow:hidden; }
+    .plan-preview .preview-wrap { max-height:210px; }
+    .plan-preview table { min-width:680px; }
+    .plan-note { min-height:18px; margin:9px 0 0; color:rgba(235,241,255,.58); font-size:9px; line-height:1.5; }
+    @keyframes pop { from { opacity:0;transform:translateY(8px) scale(.99); } to { opacity:1;transform:none; } }
+    .modal-top { display:flex; flex:0 0 auto; align-items:flex-start; justify-content:space-between; gap:15px; padding:22px 24px 17px; border-bottom:1px solid rgba(255,255,255,.12); }
+    .modal-kicker { color:#ffbd70; font-size:9px; font-weight:850; letter-spacing:.16em; text-transform:uppercase; }
+    .modal h2 { margin:6px 0 5px; font-family:Ubuntu,Arial,sans-serif; font-size:24px; font-weight:300; letter-spacing:-.025em; }
+    .modal-desc { margin:0; color:var(--muted); font-size:11px; line-height:1.55; }
+    .close { width:32px;height:32px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.06);color:#eaf0ff;font-size:19px;line-height:1; }
+    .modal-body { min-height:0; overflow:auto; padding:19px 24px 22px; }
+    .map-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+    .map-field { padding:13px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(7,19,43,.20); }
+    .map-field.wide { grid-column:1 / -1; }
+    .map-label { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; color:#f3f5ff; font-size:11px; font-weight:750; }
+    .required { color:#ffb457;font-size:9px;font-weight:700; }
+    .map-field select { width:100%; border:1px solid rgba(255,255,255,.15); border-radius:9px; outline:0; color:#f7f8ff; background:#233c6b; padding:10px 11px; font-size:11px; }
+    .map-field select option { color:#f7f8ff;background:#20365f; }
+    .hint { margin:7px 0 0; color:rgba(235,241,255,.54); font-size:9px; line-height:1.5; }
+    .grade-options { display:flex; flex-wrap:wrap; gap:8px; }
+    .grade-option { display:inline-flex; align-items:center; gap:7px; padding:8px 10px; border:1px solid rgba(255,255,255,.15); border-radius:10px; color:rgba(244,247,255,.8); background:rgba(255,255,255,.045); font-size:10px; cursor:pointer; user-select:none; transition:.15s ease; }
+    .grade-option:hover { border-color:rgba(255,166,57,.42); background:rgba(255,140,0,.08); }
+    .grade-option.selected { border-color:rgba(255,166,57,.62); color:#ffdfb4; background:rgba(255,140,0,.14); }
+    .grade-option input { width:14px; height:14px; margin:0; accent-color:#ff9a21; }
+    .grade-chip { display:inline-flex; align-items:center; gap:6px; border-radius:100px; padding:6px 9px; color:#ffd09b; background:rgba(255,140,0,.11); font-size:9px; }
+    .preview { margin-top:17px; border:1px solid rgba(255,255,255,.12); border-radius:15px; overflow:hidden; }
+    .preview-head { display:flex;justify-content:space-between;align-items:center;padding:11px 13px;background:rgba(255,255,255,.045);font-size:10px;font-weight:750; }
+    .preview-head span:last-child { color:var(--muted);font-size:9px;font-weight:500; }
+    .preview-wrap { max-height:160px; overflow:auto; }
+    .preview table { min-width:0; }
+    .preview th { padding:8px 11px; font-size:8px; }
+    .preview td { padding:8px 11px; font-size:10px; }
+    .modal-bottom { display:flex; flex:0 0 auto; justify-content:space-between; align-items:center; gap:12px; padding:15px 24px 20px; border-top:1px solid rgba(255,255,255,.1); }
+    .modal-bottom .hint { max-width:420px; margin:0; }
+    .modal-buttons { display:flex; gap:9px; }
+    .toast { position:fixed; z-index:20; right:22px; bottom:22px; max-width:min(390px,calc(100% - 44px)); padding:13px 16px; border:1px solid rgba(255,255,255,.18); border-radius:13px; background:rgba(20,38,70,.9); box-shadow:var(--shadow); color:#f8faff; font-size:12px; opacity:0; transform:translateY(8px); pointer-events:none; transition:.2s ease; backdrop-filter:blur(14px); }
+    .toast.show { opacity:1;transform:none; }
+    @media(max-width:760px) {
+      .page { width:min(100% - 24px,600px);padding-top:23px; }
+      .hero { grid-template-columns:1fr; gap:14px; margin-top:20px; }
+      .hero-blob { padding:24px 20px; border-radius:24px; }
+      .title-blob { padding:11px 14px 13px; border-radius:18px; }
+      .hero-note { justify-self:start;max-width:520px; }
+      .upload-panel { align-items:flex-start;flex-wrap:wrap; }
+      .upload-copy { flex-basis:calc(100% - 75px); }
+      .upload-actions { width:100%;padding-left:70px;flex-wrap:wrap; }
+      .summary { gap:8px; }
+      .stat { padding:13px; }
+      .stat-value { font-size:16px; }
+      .table-head { align-items:flex-start;flex-direction:column; }
+      .table-tools { width:100%; }
+      .search { flex:1; }
+      .table-action-bar { margin-bottom:12px; }
+      .footer { flex-direction:column; }
+      .modal-backdrop { align-items:flex-start; justify-content:center; padding:12px; }
+      .modal { width:100%; max-height:calc(100vh - 24px); margin:0 auto; }
+      #txtModalBackdrop { align-items:center !important; justify-content:center !important; place-items:center !important; }
+      #txtModalBackdrop.open { display:grid !important; align-items:center !important; justify-content:center !important; place-items:center !important; }
+      #txtModalBackdrop > .txt-modal { align-self:center; justify-self:center; margin:0; }
+      .modal-top,.modal-body { padding-left:16px;padding-right:16px; }
+      .adjustment-fields { grid-template-columns:1fr; }
+      .adjustment-fields .wide { grid-column:auto; }
+      .txt-modal .modal-top .close { top:16px; right:16px; }
+      .modal-bottom { padding:14px 16px 17px;align-items:flex-start;flex-direction:column; }
+      .modal-buttons { width:100%;justify-content:flex-end; }
+      .map-grid { grid-template-columns:1fr; }
+      .map-field.wide { grid-column:auto; }
+      .grade-row { align-items:flex-start;flex-direction:column;gap:9px; }
+      .plan-grid,.plan-mapping { grid-template-columns:1fr; }
+      .txt-fields { grid-template-columns:1fr; }
+      .group-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand"><span class="brandmark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M6 3.8h8l4 4V20a.8.8 0 0 1-.8.8H6.8A.8.8 0 0 1 6 20V3.8Z" stroke="currentColor" stroke-width="1.7"/><path d="M14 4v4h4M8.5 12h7M8.5 15.5h7M8.5 9h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>TrHUB | Implanta saldos - Via Balancete PDF</div>
+      <div class="privacy"><i class="privacy-dot"></i> Arquivos processados localmente</div>
+    </header>
+
+    <section class="hero hero-blob glass" aria-label="Leitura inteligente de balancetes">
+      <div>
+        <div class="eyebrow">Leitura inteligente de balancetes</div>
+        <div class="title-blob glass"><h1>Implanta Saldo - <span>Simples Nacional</span></h1></div>
+        <p class="intro">Importe um balancete, confira o de-para das colunas e selecione o grau analítico. As contas aparecem em uma tabela limpa, pronta para conferência ou exportação.</p>
+      </div>
+      <aside class="hero-note">A extração acontece no seu navegador. O PDF e a planilha do plano não são enviados a um servidor.</aside>
+    </section>
+
+    <section id="dropZone" class="upload-panel glass" aria-label="Importar balancete PDF">
+      <div class="upload-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v4A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="upload-copy"><strong id="uploadTitle">Traga seu balancete para cá</strong><span id="uploadSub">Arraste um PDF ou escolha um arquivo do seu dispositivo</span></div>
+      <div class="upload-actions"><button class="btn btn-ghost" id="sampleBtn" type="button">Como funciona</button><button class="btn btn-ghost" id="planBtn" type="button">Importar Plano Domínio</button><button class="btn btn-primary" id="chooseBtn" type="button">Selecionar PDF</button></div>
+      <input id="fileInput" type="file" accept="application/pdf,.pdf">
+      <input id="planFileInput" type="file" accept=".xlsx,.xls,.xlsm,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
+    </section>
+    <div class="statusline" id="status" role="status" aria-live="polite">PDFs com texto são lidos diretamente; páginas escaneadas recebem OCR automático em português no navegador. O mecanismo é baixado sob demanda; o PDF permanece local.</div>
+
+    <section class="summary" aria-label="Resumo da extração">
+      <div class="stat glass"><div class="stat-label">Contas exibidas</div><div class="stat-value" id="countStat">—</div></div>
+      <div class="stat glass"><div class="stat-label">Total de débitos</div><div class="stat-value accent" id="debitStat">—</div></div>
+      <div class="stat glass"><div class="stat-label">Total de créditos</div><div class="stat-value" id="creditStat">—</div></div>
+    </section>
+
+    <section id="accountsCard" class="table-card glass collapsed" aria-label="Contas analíticas extraídas">
+      <div id="reviewLegend" class="review-legend" aria-label="Legenda de revisão das relações">
+        <div class="legend-intro">Revise os vínculos amarelos antes de confirmar; nos vermelhos, informe o código Domínio e marque como relacionado. Códigos informados manualmente aguardam confirmação em amarelo; linhas confirmadas ficam verdes.</div>
+        <span class="legend-chip legend-good">Verde · relacionada/confirmada</span>
+        <span class="legend-chip legend-review">Amarelo · revisar similaridade abaixo de 80%</span>
+        <span class="legend-chip legend-missing">Vermelho · sem referência no plano</span>
+      </div>
+      <div class="table-head">
+        <button id="accountsToggle" class="table-collapse-toggle" type="button" aria-expanded="false" aria-controls="tableContent" title="Abrir Contas analíticas"><span class="table-head-title"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 9 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span><span class="table-title">Contas analíticas</span><span class="table-subtitle" id="tableSubtitle">Aguardando a importação de um PDF</span></span></span></button>
+        <div class="table-tools"><input id="searchInput" class="search" type="search" placeholder="Buscar código ou descrição" aria-label="Buscar conta" disabled></div>
+      </div>
+      <div id="tableContent" class="empty"><div><div class="empty-symbol"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div><strong>Seu resultado aparecerá aqui</strong><p>Importe o balancete e confirme o mapeamento no popup para montar o card com código, descrição e saldo.</p></div></div>
+      <div id="pager" class="pagination"><span id="pageRange">—</span><div class="page-nav"><button id="prevPage" class="page-arrow" type="button" aria-label="Página anterior" title="Página anterior"><svg viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span id="pageIndicator" class="page-indicator">1 / 1</span><button id="nextPage" class="page-arrow" type="button" aria-label="Próxima página" title="Próxima página"><svg viewBox="0 0 24 24" fill="none"><path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+      <div class="table-action-bar glass" aria-label="Ações das contas analíticas">
+        <button id="validateBtn" class="icon-action" type="button" title="Validar inconsistências" aria-label="Validar inconsistências"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3.8 19 6.5v5.1c0 4.3-2.7 7.4-7 9.1-4.3-1.7-7-4.8-7-9.1V6.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button id="exportBtn" class="icon-action" type="button" title="Gerar arquivo de importação" aria-label="Gerar arquivo de importação" disabled><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v11m0 0 4-4m-4 4-4-4M5 19.5h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </section>
+    <footer class="footer"><span>TrHUB | Implanta saldos - Via Balancete PDF · Ferramenta de apoio à conferência contábil</span><span>PDF.js · SheetJS · as bibliotecas e a fonte Ubuntu carregam da internet; os arquivos permanecem locais</span></footer>
+  </main>
+
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <section class="modal glass">
+      <header class="modal-top"><div><div class="modal-kicker">Configuração da importação</div><h2 id="modalTitle">Confirme o de-para do PDF</h2><p class="modal-desc" id="modalDesc">Confira qual campo do documento corresponde a cada coluna do card. A prévia abaixo atualiza conforme o mapeamento.</p></div><button class="close" id="closeModal" aria-label="Fechar" type="button">×</button></header>
+      <div class="modal-body">
+        <div class="map-grid">
+          <label class="map-field"><span class="map-label">Código da conta <span class="required">OBRIGATÓRIO</span></span><select id="mapCode"></select><p class="hint">Coluna que identifica a conta no plano contábil.</p></label>
+          <label class="map-field"><span class="map-label">Descrição <span class="required">OBRIGATÓRIO</span></span><select id="mapDescription"></select><p class="hint">Nome ou histórico associado à conta.</p></label>
+          <label class="map-field wide"><span class="map-label">Saldo <span class="required">DE-PARA</span></span><select id="mapBalance"></select><p class="hint" id="balanceHint">Escolha a coluna de saldo ou como combinar as colunas devedora e credora.</p></label>
+          <div class="map-field wide"><div class="map-label">Grau analítico <span class="grade-chip" id="autoGradeChip">Sugestão automática</span></div><div id="mapGradeOptions" class="grade-options" role="group" aria-label="Selecione um ou mais graus analíticos"></div><p class="hint" id="gradeHint">Marque um ou mais graus para importar as respectivas contas.</p></div>
+        </div>
+        <div class="preview"><div class="preview-head"><span>Prévia do resultado</span><span id="previewCount">—</span></div><div class="preview-wrap"><table><thead><tr><th>Cód. domínio</th><th>Cód. conta</th><th>Descrição</th><th style="text-align:right">Saldo</th></tr></thead><tbody id="previewBody"></tbody></table></div></div>
+      </div>
+      <footer class="modal-bottom"><p class="hint">O campo <b>cód. domínio</b> será mantido vazio. Contas de outros graus e linhas de totalização serão descartadas.</p><div class="modal-buttons"><button class="btn btn-ghost" id="cancelModal" type="button">Cancelar</button><button class="btn btn-primary" id="confirmImport" type="button">Confirmar importação</button></div></footer>
+    </section>
+  </div>
+  <div id="groupModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="groupModalTitle">
+    <section class="modal group-modal glass">
+      <header class="modal-top"><div><div class="modal-kicker">Antes de importar o Excel</div><h2 id="groupModalTitle">Configure os grupos contábeis</h2><p class="modal-desc">Indique a que grupo corresponde o primeiro dígito da classificação. Cada caixa oferece todas as seis opções; os valores iniciais seguem a configuração padrão informada.</p></div><button class="close" id="closeGroupModal" aria-label="Fechar" type="button">×</button></header>
+      <div class="modal-body">
+        <div class="group-grid">
+          <label class="map-field"><span class="map-label">Classificação iniciada em 1</span><select id="groupDigit1" class="group-select"><option value="1" selected>1 - Ativo</option><option value="2">2 - Passivo</option><option value="3">3 - Receitas</option><option value="4">4 - Custos e Despesas</option><option value="5">5 - Resultado</option><option value="6">6 - Outros</option></select></label>
+          <label class="map-field"><span class="map-label">Classificação iniciada em 2</span><select id="groupDigit2" class="group-select"><option value="1">1 - Ativo</option><option value="2" selected>2 - Passivo</option><option value="3">3 - Receitas</option><option value="4">4 - Custos e Despesas</option><option value="5">5 - Resultado</option><option value="6">6 - Outros</option></select></label>
+          <label class="map-field"><span class="map-label">Classificação iniciada em 3</span><select id="groupDigit3" class="group-select"><option value="1">1 - Ativo</option><option value="2">2 - Passivo</option><option value="3" selected>3 - Receitas</option><option value="4">4 - Custos e Despesas</option><option value="5">5 - Resultado</option><option value="6">6 - Outros</option></select></label>
+          <label class="map-field"><span class="map-label">Classificação iniciada em 4</span><select id="groupDigit4" class="group-select"><option value="1">1 - Ativo</option><option value="2">2 - Passivo</option><option value="3">3 - Receitas</option><option value="4" selected>4 - Custos e Despesas</option><option value="5">5 - Resultado</option><option value="6">6 - Outros</option></select></label>
+          <label class="map-field"><span class="map-label">Classificação iniciada em 5</span><select id="groupDigit5" class="group-select"><option value="1">1 - Ativo</option><option value="2">2 - Passivo</option><option value="3">3 - Receitas</option><option value="4">4 - Custos e Despesas</option><option value="5" selected>5 - Resultado</option><option value="6">6 - Outros</option></select></label>
+          <label class="map-field"><span class="map-label">Classificação iniciada em 6</span><select id="groupDigit6" class="group-select"><option value="1">1 - Ativo</option><option value="2">2 - Passivo</option><option value="3">3 - Receitas</option><option value="4">4 - Custos e Despesas</option><option value="5">5 - Resultado</option><option value="6" selected>6 - Outros</option></select></label>
+        </div>
+        <p class="plan-note">As opções podem ser ajustadas se a numeração do seu balancete/plano usar outra convenção. Este mapeamento será aplicado aos dois arquivos antes da comparação das descrições.</p>
+      </div>
+      <footer class="modal-bottom"><p class="hint">Depois de continuar, escolha a planilha Excel; em seguida você poderá mapear as colunas do Plano Domínio.</p><div class="modal-buttons"><button class="btn btn-ghost" id="cancelGroupModal" type="button">Cancelar</button><button class="btn btn-primary" id="continuePlanImport" type="button">Continuar para escolher Excel</button></div></footer>
+    </section>
+  </div>
+  <div id="planModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="planModalTitle">
+    <section class="modal plan-modal glass">
+      <header class="modal-top"><div><div class="modal-kicker">Vínculo de contas</div><h2 id="planModalTitle">Mapeie o Plano Domínio</h2><p class="modal-desc" id="planModalDesc">Associe as colunas do Excel. A correspondência considera o grupo atribuído ao primeiro dígito e uma descrição exata ou aproximada.</p></div><button class="close" id="closePlanModal" aria-label="Fechar" type="button">×</button></header>
+      <div class="modal-body">
+        <div class="plan-grid">
+          <label class="map-field"><span class="map-label">Aba da planilha</span><select id="planSheet" class="plan-select"></select></label>
+          <label class="map-field"><span class="map-label">Critério de semelhança</span><select id="planThreshold" class="plan-select"><option value="0.70">Mais rigoroso</option><option value="0.55" selected>Equilibrado</option><option value="0.42">Mais flexível</option></select></label>
+        </div>
+        <div class="plan-mapping">
+          <label class="map-field"><span class="map-label">Código reduzido <span class="required">DOMÍNIO</span></span><select id="planCode" class="plan-select"></select></label>
+          <label class="map-field"><span class="map-label">Classificação <span class="required">PRIMEIRO DÍGITO</span></span><select id="planClass" class="plan-select"></select></label>
+          <label class="map-field"><span class="map-label">Descrição <span class="required">TEXTO</span></span><select id="planDescription" class="plan-select"></select></label>
+        </div>
+        <p id="planFileLabel" class="plan-note"></p>
+        <div class="plan-preview"><div class="preview-head"><span>Prévia dos vínculos sugeridos</span><span id="planPreviewCount">—</span></div><div class="preview-wrap"><table><thead><tr><th>Cód. balancete</th><th>Descrição no balancete</th><th>Cód. reduzido</th><th>Correspondência</th></tr></thead><tbody id="planPreviewBody"></tbody></table></div></div>
+        <p id="planMatchNote" class="plan-note"></p>
+      </div>
+      <footer class="modal-bottom"><p class="hint">Quando o grupo configurado ou a descrição não tiver correspondência segura, o campo cód. domínio fica vazio e pode ser editado manualmente.</p><div class="modal-buttons"><button class="btn btn-ghost" id="cancelPlanModal" type="button">Cancelar</button><button class="btn btn-primary" id="confirmPlan" type="button">Aplicar Plano Domínio</button></div></footer>
+    </section>
+  </div>
+  <div id="validationModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="validationModalTitle">
+    <section class="modal validation-modal glass">
+      <header class="modal-top"><div><div class="modal-kicker">Conferência automática</div><h2 id="validationModalTitle">Validação das contas</h2><p class="modal-desc">Confira se todas as linhas estão preenchidas e se o total dos débitos é igual ao total dos créditos.</p></div><button class="close" id="closeValidationModal" aria-label="Fechar" type="button">×</button></header>
+      <div class="modal-body">
+        <div id="validationBody" class="validation-summary"></div>
+        <section id="adjustmentForm" class="adjustment-form" aria-label="Lançamento manual de ajuste">
+          <div class="adjustment-form-title"><span>Lançamento manual de ajuste</span><span class="required">VALOR POSITIVO = DÉBITO · NEGATIVO = CRÉDITO</span></div>
+          <div class="adjustment-fields">
+            <label class="map-field"><span class="map-label">Cód. reduzido conta Domínio <span class="required">OBRIGATÓRIO</span></span><input id="adjustmentCode" class="adjustment-input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Ex.: 12345"></label>
+            <label class="map-field"><span class="map-label">Data <span class="required">OBRIGATÓRIO</span></span><input id="adjustmentDate" class="adjustment-input" type="date"></label>
+            <label class="map-field"><span class="map-label">Valor <span class="required">0,00</span></span><input id="adjustmentAmount" class="adjustment-input" type="text" inputmode="decimal" placeholder="0,00"></label>
+            <label class="map-field"><span class="map-label">Cód. histórico <span class="required">OBRIGATÓRIO</span></span><input id="adjustmentHistoryCode" class="adjustment-input" type="text" placeholder="Ex.: 1"></label>
+            <label class="map-field wide"><span class="map-label">Histórico <span class="required">OBRIGATÓRIO</span></span><input id="adjustmentHistory" class="adjustment-input" type="text" placeholder="Descrição do lançamento de ajuste"></label>
+          </div>
+          <p class="hint">O lançamento será gravado como um registro 6100 e usado para igualar débitos e créditos no TXT.</p>
+          <div class="adjustment-form-actions"><button id="cancelAdjustment" class="btn btn-ghost" type="button">Cancelar</button><button id="saveAdjustment" class="btn btn-primary" type="button">Aplicar ajuste</button></div>
+        </section>
+      </div>
+      <footer class="modal-bottom"><p id="validationHint" class="hint">A validação considera os saldos atualmente exibidos.</p><div class="modal-buttons"><button id="openAdjustmentBtn" class="icon-action" type="button" title="Inserir lançamento de ajuste" aria-label="Inserir lançamento de ajuste"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.5 4.5h8l4 4v11h-12zM13.5 4.5v4h4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button><button class="btn btn-ghost" id="cancelValidationModal" type="button">Fechar</button></div></footer>
+    </section>
+  </div>
+  <div id="txtModalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="txtModalTitle">
+    <section class="modal txt-modal glass">
+      <header class="modal-top"><div><div class="modal-kicker">Arquivo para importação contábil</div><h2 id="txtModalTitle">Gerar arquivo Domínio</h2><p class="modal-desc">Confira os dados do cabeçalho e a data que será aplicada aos lançamentos antes de gerar o TXT.</p></div><button class="close" id="closeTxtModal" aria-label="Fechar" type="button">×</button></header>
+      <div class="modal-body">
+        <div class="txt-layout-info"><strong>Importação: Domínio Sistemas com Separador</strong>Cada conta do balancete gerará seu próprio registro 6100, com o código reduzido correspondente do Plano Domínio. Códigos e descrições de conta do PDF não serão gravados como contas Domínio. Os registros 0000, 6000 (tipo V) e 6100 são separados por |, com data dd/mm/aaaa, valores decimais com vírgula e pipe final.<br><a href="https://suporte.dominioatendimento.com/central/faces/solucao.html?codigo=672#6000" target="_blank" rel="noopener noreferrer">Consultar o leiaute oficial</a></div>
+        <div class="txt-fields">
+          <label class="map-field"><span class="map-label">Inscrição da empresa <span class="required">SÓ NÚMEROS</span></span><input id="txtCompanyId" class="txt-input" type="text" inputmode="numeric" maxlength="14" placeholder="02825945000178" autocomplete="off"><p id="txtCompanyHint" class="hint">CNPJ/CPF/CEI/CAEPF; confira a inscrição detectada ou informe-a manualmente.</p></label>
+          <label class="map-field"><span class="map-label">Data dos lançamentos <span class="required">DD/MM/AAAA</span></span><input id="txtPostingDate" class="txt-input" type="date"><p class="hint">Sugestão da data final do balancete; altere se necessário.</p></label>
+        </div>
+        <div id="txtPreview" class="txt-preview" aria-live="polite">A prévia da exportação aparecerá aqui.</div>
+        <div class="plan-preview txt-domain-preview"><div class="preview-head"><span>Registros 6100 que irão para o arquivo</span><span id="domainExportCount">—</span></div><div class="preview-wrap"><table><thead><tr><th>Código reduzido</th><th>Descrição do Plano Domínio</th><th>Conta do balancete</th><th style="text-align:right">Saldo para TXT</th></tr></thead><tbody id="domainExportBody"></tbody></table></div></div>
+      </div>
+      <footer class="modal-bottom"><p class="hint">Somente códigos reduzidos analíticos do Plano Domínio serão usados. Os saldos do PDF são somados por conta Domínio vinculada. Saldo positivo vai a débito; negativo, a crédito.</p><div class="modal-buttons"><button class="btn btn-ghost" id="cancelTxtModal" type="button">Cancelar</button><button class="btn btn-primary" id="generateTxtBtn" type="button" disabled>Gerar TXT</button></div></footer>
+    </section>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script type="module">
+    const PDFJS_VERSION = '4.10.38';
+    const pdfjsLib = await import(`https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VERSION}/build/pdf.mjs`);
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.mjs`;
+
+    const $ = (id) => document.getElementById(id);
+    const state = { fileName:'', sourceRows:[], fields:[], grades:[], accounts:[], grade:null, rawLines:[], pdfTotals:null, page:0, pageSize:10, planWorkbook:null, planFileName:'', planGrid:[], planHeaderRow:0, planColumns:[], planTypeIndex:-1, domainPlan:null, groupMapping:{'1':'1','2':'2','3':'3','4':'4','5':'5','6':'6'}, pendingGroupMapping:null, txtPrefillFileName:'', manualAdjustment:null, columnFilters:{domain:'',code:'',description:'',balance:'',similarity:'',relation:''}, columnWidths:{domain:138,code:170,description:320,similarity:145,balance:160,relation:155,action:58} };
+    const fileInput = $('fileInput');
+    const planFileInput = $('planFileInput');
+    let toastTimer;
+    const TESSERACT_VERSION='7.0.0';
+    let tesseractLibraryPromise=null, ocrWorkerPromise=null;
+    let activeOcrPageNo=0, activeOcrPageCount=0;
+
+    const normalize = (s) => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+    const normalizeWords = (s) => normalize(s).replace(/[^a-z0-9]+/g,' ').trim();
+    const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const money = (value) => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(value)||0);
+    const degree = (code) => {
+      const groups=String(code).trim().match(/\d+/g)||[];
+      return groups.length>1?groups.length:(groups[0]?.length||0);
+    };
+    const cleanCode = (s) => String(s ?? '').trim().replace(/\s+/g,'');
+
+    function restoreOcrCodeSeparators(rows) {
+      const codes=new Set(rows.map(row=>cleanCode(row.code)).filter(code=>/^\d+$/.test(code)));
+      for(const row of rows){
+        const code=cleanCode(row.code);
+        if(!/^\d{2,}$/.test(code))continue;
+        const breaks=[];
+        for(let i=1;i<code.length;i++)if(codes.has(code.slice(0,i)))breaks.push(i);
+        if(!breaks.length)continue;
+        const parts=[];let start=0;
+        for(const point of breaks){parts.push(code.slice(start,point));start=point;}
+        parts.push(code.slice(start));
+        row.code=parts.filter(Boolean).join('.');
+      }
+    }
+
+    function showToast(message) {
+      const el = $('toast'); el.textContent = message; el.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+    }
+    function setStatus(message, error=false) { $('status').textContent = message; $('status').classList.toggle('error',error); }
+
+    async function loadTesseractLibrary() {
+      if(window.Tesseract)return window.Tesseract;
+      if(!tesseractLibraryPromise){
+        tesseractLibraryPromise=new Promise((resolve,reject)=>{
+          const script=document.createElement('script');
+          script.src=`https://cdn.jsdelivr.net/npm/tesseract.js@${TESSERACT_VERSION}/dist/tesseract.min.js`;
+          script.async=true;
+          script.onload=()=>window.Tesseract?resolve(window.Tesseract):reject(new Error('A biblioteca OCR foi carregada sem disponibilizar o mecanismo.'));
+          script.onerror=()=>reject(new Error('Não foi possível carregar o OCR. Verifique sua conexão com a internet e tente novamente.'));
+          document.head.appendChild(script);
+        }).catch(error=>{tesseractLibraryPromise=null;throw error;});
+      }
+      return tesseractLibraryPromise;
+    }
+
+    async function getOcrWorker() {
+      if(!ocrWorkerPromise){
+        ocrWorkerPromise=(async()=>{
+          const Tesseract=await loadTesseractLibrary();
+          const labels={
+            'loading tesseract core':'Preparando o mecanismo OCR',
+            'initializing tesseract':'Inicializando o OCR',
+            'loading language traineddata':'Carregando o idioma português',
+            'initializing api':'Preparando a leitura',
+            'recognizing text':'Reconhecendo texto'
+          };
+          return Tesseract.createWorker('por',1,{logger:message=>{
+            const label=labels[message.status]||message.status||'Processando OCR';
+            const progress=Number.isFinite(message.progress)?` · ${Math.round(message.progress*100)}%`:'';
+            const pageInfo=activeOcrPageCount?`Página ${activeOcrPageNo} de ${activeOcrPageCount} · `:'';
+            setStatus(`${pageInfo}${label}${progress}`);
+          }});
+        })().catch(error=>{ocrWorkerPromise=null;throw error;});
+      }
+      return ocrWorkerPromise;
+    }
+
+    function groupPdfItems(positioned) {
+      positioned.sort((a,b)=>b.y-a.y||a.x-b.x);
+      const groups=[];
+      for(const item of positioned){
+        let row=groups.find(group=>Math.abs(group.y-item.y)<=2.4);
+        if(!row){row={y:item.y,items:[]};groups.push(row);}
+        row.items.push(item);row.y=row.items.reduce((sum,part)=>sum+part.y,0)/row.items.length;
+      }
+      groups.sort((a,b)=>b.y-a.y);
+      return groups.map(group=>{
+        group.items.sort((a,b)=>a.x-b.x);
+        return {items:group.items,text:group.items.map(item=>item.str).join(' ').replace(/\s+/g,' ').trim()};
+      });
+    }
+
+    async function renderPdfPageForOcr(page) {
+      const base=page.getViewport({scale:1});
+      const longest=Math.max(base.width,base.height);
+      const scale=Math.min(2.25,3200/longest);
+      const viewport=page.getViewport({scale});
+      const canvas=document.createElement('canvas');
+      canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
+      const context=canvas.getContext('2d',{willReadFrequently:true});
+      await page.render({canvasContext:context,viewport}).promise;
+      return canvas;
+    }
+
+    function tsvToPositionedLines(tsv,canvasHeight) {
+      const groups=new Map();
+      for(const row of String(tsv||'').split(/\r?\n/).slice(1)){
+        if(!row.trim())continue;
+        const cells=row.split('\t');
+        if(cells.length<12||Number(cells[0])!==5)continue;
+        const text=cells.slice(11).join('\t').trim();
+        const confidence=Number(cells[10]);
+        if(!text||!Number.isFinite(confidence)||confidence<0)continue;
+        const blockKey=cells.slice(1,5).join(':');
+        const x=Number(cells[6]),top=Number(cells[7]),width=Number(cells[8]),height=Number(cells[9]);
+        if(!Number.isFinite(x)||!Number.isFinite(top))continue;
+        if(!groups.has(blockKey))groups.set(blockKey,{y:canvasHeight-(top+height/2),items:[]});
+        groups.get(blockKey).items.push({str:text,x,y:canvasHeight-(top+height/2),width:Number.isFinite(width)?width:0});
+      }
+      return [...groups.values()].map(group=>{
+        group.items.sort((a,b)=>a.x-b.x);
+        return {items:group.items,text:group.items.map(item=>item.str).join(' ').replace(/\s+/g,' ').trim(),y:group.y};
+      }).sort((a,b)=>b.y-a.y);
+    }
+
+    async function readPdf(file) {
+      if (!file || (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf'))) throw new Error('Selecione um arquivo PDF.');
+      setStatus('Abrindo o PDF no navegador…');
+      $('chooseBtn').disabled = true;
+      try {
+        const data = new Uint8Array(await file.arrayBuffer());
+        const pdf = await pdfjsLib.getDocument({data}).promise;
+        const lines = [];
+        let ocrPageCount=0;
+        for (let pageNo=1; pageNo<=pdf.numPages; pageNo++) {
+          const page = await pdf.getPage(pageNo);
+          const content = await page.getTextContent();
+          const positioned = content.items.filter(item => item.str && item.str.trim()).map(item => ({
+            str:item.str.trim(), x:item.transform[4], y:item.transform[5], width:item.width || 0
+          }));
+          const nativeLines=groupPdfItems(positioned);
+          const hasNativeAccountRows=parseLines(nativeLines).rows.length>0;
+          if(hasNativeAccountRows){
+            lines.push(...nativeLines);
+            setStatus(`Lendo texto selecionável · página ${pageNo} de ${pdf.numPages}…`);
+            continue;
+          }
+          activeOcrPageNo=pageNo;activeOcrPageCount=pdf.numPages;ocrPageCount++;
+          setStatus(`Página ${pageNo} de ${pdf.numPages} sem linhas de conta legíveis; iniciando OCR em português…`);
+          let canvas;
+          try{
+            const worker=await getOcrWorker();
+            canvas=await renderPdfPageForOcr(page);
+            const result=await worker.recognize(canvas,{}, {tsv:true});
+            const ocrLines=tsvToPositionedLines(result.data?.tsv,canvas.height);
+            lines.push(...(ocrLines.length?ocrLines:nativeLines));
+          }finally{
+            if(canvas){canvas.width=0;canvas.height=0;}
+          }
+        }
+        const parsed = parseLines(lines);
+        if (!parsed.rows.length) throw new Error('Não consegui identificar contas neste PDF, mesmo após tentar OCR. Confira a qualidade da imagem, a orientação das páginas e o leiaute das colunas.');
+        if(ocrPageCount){
+          restoreOcrCodeSeparators(parsed.rows);
+          parsed.grades=[...new Set(parsed.rows.map(row=>degree(row.code)))].filter(level=>level>0).sort((a,b)=>a-b);
+        }
+        parsed.ocrPageCount=ocrPageCount;
+        state.fileName=file.name; state.sourceRows=parsed.rows; state.fields=parsed.fields; state.grades=parsed.grades; state.rawLines=lines.map(l=>l.text); state.pdfTotals=parsed.totals;
+        $('uploadTitle').textContent=file.name;
+        $('uploadSub').textContent=`${pdf.numPages} página${pdf.numPages===1?'':'s'} · ${parsed.rows.length} linha${parsed.rows.length===1?'':'s'} de conta detectada${parsed.rows.length===1?'':'s'}${ocrPageCount?` · OCR em ${ocrPageCount} página${ocrPageCount===1?'':'s'}`:' · texto nativo'}`;
+        configureMapping(parsed);
+        $('modalBackdrop').classList.add('open');
+        setStatus(`Leitura concluída${ocrPageCount?` com OCR em ${ocrPageCount} página(s); confira possíveis trocas de caracteres.`:''} Revise o de-para e confirme para exibir as contas analíticas.`);
+      } finally { $('chooseBtn').disabled=false; }
+    }
+
+    function parseLines(lines) {
+      // Locate header positions to infer where code, description and debit/credit columns sit.
+      const header = lines.find(line => /codigo|cod\.?|conta\s+contabil/i.test(normalize(line.text)) && /descri|conta/i.test(normalize(line.text)) && /saldo|devedor|credor|debito|credito/i.test(normalize(line.text)))
+        || lines.find(line => /codigo|cod\.?/i.test(normalize(line.text)) && /descri|conta/i.test(normalize(line.text)));
+      const headerText=normalize(header?.text || '');
+      const headerItems=header?.items || [];
+      const findX=(regex) => {
+        const item=headerItems.find(i=>regex.test(normalize(i.str)));
+        return item?.x;
+      };
+      const codeX=findX(/codigo|cod\.?$/) ?? headerItems[0]?.x;
+      const descX=findX(/descri|conta/);
+      let debitX=findX(/devedor|debito/);
+      let creditX=findX(/credor|credito/);
+      // Alguns relatórios têm duas colunas chamadas apenas “Saldo”: anterior e atual.
+      // Nesse caso, a última ocorrência é o saldo atual; se o PDF mantiver o rótulo
+      // completo em um único item, damos preferência a “Saldo Atual/Final”.
+      const balanceHeaderItem=headerItems.find(i=>/saldo\s*(?:atual|final|liquid|contabil|exercicio)/i.test(normalize(i.str)))
+        || headerItems.filter(i=>/saldo/i.test(normalize(i.str)) && !/devedor|credor/i.test(normalize(i.str))).at(-1);
+      let balanceX=balanceHeaderItem?.x;
+      let hasDebit=/devedor|debito/.test(headerText), hasCredit=/credor|credito/.test(headerText);
+      let inferredColumns=false;
+      const positions=lines.flatMap(line=>line.items.filter(item=>looksMoney(item.str)).map(item=>({x:item.x,width:item.width||0}))).sort((a,b)=>a.x-b.x);
+      const clusters=[];
+      for(const item of positions){
+        let cluster=clusters.find(current=>Math.abs(current.center-item.x)<=Math.max(30,(item.width||0)*.3));
+        if(!cluster){cluster={center:item.x,width:item.width||0,count:1};clusters.push(cluster);}
+        else{cluster.center=(cluster.center*cluster.count+item.x)/(cluster.count+1);cluster.width=Math.max(cluster.width,item.width||0);cluster.count++;}
+      }
+      const balanceLabel=normalize(balanceHeaderItem?.str||'');
+      const explicitBalanceColumn=Boolean(balanceX!=null&&(clusters.length>=3||clusters.length===1||/saldo\s*(atual|final|liquid|contabil|exercicio)/.test(balanceLabel)));
+      if(!explicitBalanceColumn)balanceX=null;
+      if(!hasDebit&&!hasCredit){
+        if(clusters.length===2){
+          clusters.sort((a,b)=>a.center-b.center);
+          debitX=clusters[0].center;creditX=clusters[1].center;hasDebit=true;hasCredit=true;inferredColumns=true;
+        }
+      }
+      const rows=[];
+      const totals={debit:0,credit:0,explicit:false};
+      for (const line of lines) {
+        const items=line.items;
+        const text=line.text;
+        if(/\btotal\b/.test(normalize(text))){
+          const amounts=items.filter(item=>looksMoney(item.str)).sort((a,b)=>a.x-b.x).map(item=>item.str);
+          if(hasDebit&&hasCredit&&amounts.length>=2){totals.debit=parseBrazilianNumber(amounts[0]);totals.credit=parseBrazilianNumber(amounts[amounts.length-1]);totals.explicit=true;}
+          else if(hasDebit&&amounts.length){totals.debit=parseBrazilianNumber(amounts[0]);totals.explicit=true;}
+          else if(hasCredit&&amounts.length){totals.credit=parseBrazilianNumber(amounts[0]);totals.explicit=true;}
+        }
+        if (/total\b|balancete|periodo|empresa|saldo devedor|saldo credor|codigo\s+descri/i.test(normalize(text))) continue;
+        const codeItem=items.find(i=>/^(?:\d+(?:\.\d+)*\.?|-)$/.test(i.str.trim()));
+        let code=codeItem?.str.trim();
+        let description='';
+        let debit='', credit='', direct='';
+        if (codeItem) {
+          const x=codeItem.x;
+          const after=items.filter(i=>i.x>x+Math.max(1,codeItem.width*.35));
+          const numericCandidates=after.filter(i=>looksMoney(i.str));
+          const descParts=after.filter(i=>!looksMoney(i.str));
+          description=descParts.map(i=>i.str).join(' ').replace(/\s+/g,' ').trim()
+            .replace(/\s+(?:[DC]\s*)+$/i,'').trim();
+          // Assign numeric cells using header positions when available; otherwise use their order.
+          for (const num of numericCandidates) {
+            const nx=num.x;
+            if(explicitBalanceColumn&&balanceX!=null&&clusters.length){
+              const balanceCluster=clusters.reduce((best,current)=>Math.abs(current.center-balanceX)<Math.abs(best.center-balanceX)?current:best,clusters[0]);
+              const valueCluster=clusters.reduce((best,current)=>Math.abs(current.center-nx)<Math.abs(best.center-nx)?current:best,clusters[0]);
+              if(valueCluster===balanceCluster){direct ||= num.str;continue;}
+            }
+            if (hasDebit && hasCredit) {
+              if (debitX != null && nx >= debitX-5 && creditX != null && nx >= creditX-5) credit ||= num.str;
+              else if (creditX != null && nx >= creditX-5 && (debitX==null || nx>debitX+5)) credit ||= num.str;
+              else debit ||= num.str;
+            } else if (hasDebit) debit ||= num.str;
+            else if (hasCredit) credit ||= num.str;
+            else direct ||= num.str;
+          }
+          // If x locations are unreliable but two amounts are present, use their document order.
+          if (hasDebit && hasCredit && numericCandidates.length>1 && !credit) credit=numericCandidates[numericCandidates.length-1].str;
+          if (hasDebit && hasCredit && numericCandidates.length>1 && !debit) debit=numericCandidates[0].str;
+        } else {
+          // Fallback for PDFs that return a whole table row as one text string.
+          const m=text.match(/^\s*(\d+(?:\.\d+)*\.?)\s+(.+?)\s*$/);
+          if (!m) continue;
+          code=m[1];
+          let rest=m[2];
+          const nums=[...rest.matchAll(/(?:R\$\s*)?-?\s*\d[\d.]*,\d{2}/g)];
+          if (nums.length) {
+            const first=nums[0].index;
+            description=rest.slice(0,first).trim();
+            if (hasDebit && hasCredit) { debit=nums[0][0]; credit=nums[1]?.[0]||''; }
+            else if (hasDebit) debit=nums[0][0]; else if (hasCredit) credit=nums[0][0]; else direct=nums[0][0];
+          } else description=rest.trim();
+        }
+        if (!code || !description || normalize(description)==='total') continue;
+        const validCode=/^\d+(?:\.\d+)*\.?$/.test(code);
+        if (!validCode) continue;
+        rows.push({code:cleanCode(code).replace(/\.$/,''),description,debit,credit,balance:direct});
+      }
+      const grades=[...new Set(rows.map(r=>degree(r.code)))].filter(n=>n>0).sort((a,b)=>a-b);
+      // Logical source fields shown in the de-para. Labels come from the document header when available.
+      const labels={code:headerItems.find(i=>/codigo|cod\.?$/i.test(normalize(i.str)))?.str || 'Código',description:headerItems.find(i=>/descri|conta/i.test(normalize(i.str)))?.str || 'Descrição',debit:headerItems.find(i=>/devedor|debito/i.test(normalize(i.str)))?.str || (inferredColumns?'Saldo devedor (posição inferida)':'Saldo devedor'),credit:headerItems.find(i=>/credor|credito/i.test(normalize(i.str)))?.str || (inferredColumns?'Saldo credor (posição inferida)':'Saldo credor'),balance:balanceHeaderItem?.str || 'Saldo'};
+      const fields=[];
+      if (rows.some(r=>r.code)) fields.push({key:'code',label:labels.code});
+      if (rows.some(r=>r.description)) fields.push({key:'description',label:labels.description});
+      if (rows.some(r=>r.balance)||explicitBalanceColumn) fields.push({key:'balance',label:labels.balance});
+      if (rows.some(r=>r.debit)) fields.push({key:'debit',label:labels.debit});
+      if (rows.some(r=>r.credit)) fields.push({key:'credit',label:labels.credit});
+      // Include expected balance fields even when values are blank, so zero-balance accounts can still be mapped.
+      if ((hasDebit || hasCredit) && !fields.some(f=>f.key==='debit')) fields.push({key:'debit',label:labels.debit});
+      if ((hasDebit || hasCredit) && !fields.some(f=>f.key==='credit')) fields.push({key:'credit',label:labels.credit});
+      if (!fields.some(f=>f.key==='balance') && !hasDebit && !hasCredit) fields.push({key:'balance',label:labels.balance});
+      return {rows,fields,grades,hasDebit,hasCredit,inferredColumns,explicitBalanceColumn,totals};
+    }
+
+    function looksMoney(value) { return /(?:R\$\s*)?-?\s*\d[\d.]*,\d{2}/.test(String(value).trim()); }
+    function parseBrazilianNumber(value) {
+      if (value == null || String(value).trim()==='') return 0;
+      // Balancetes costumam anexar D/C ao saldo (ex.: “3.000,00D”).
+      // Além de remover o indicador, preserve sua semântica: C é saldo negativo.
+      const raw=String(value).trim();
+      const isCredit=/C\s*$/i.test(raw);
+      const s=raw.replace(/R\$/gi,'').replace(/[DC]\s*$/i,'').replace(/\s/g,'').replace(/\./g,'').replace(',','.');
+      const n=Number(s); if(!Number.isFinite(n))return 0;
+      return isCredit?-Math.abs(n):n;
+    }
+    function sourceValue(row,key) { return key==='code'?row.code:key==='description'?row.description:key==='balance'?row.balance:key==='debit'?row.debit:key==='credit'?row.credit:''; }
+    function fieldLabel(key) { return state.fields.find(f=>f.key===key)?.label || key; }
+    function selectedGrades() { return [...document.querySelectorAll('#mapGradeOptions input[type="checkbox"]:checked')].map(input=>Number(input.value)).filter(Number.isFinite).sort((a,b)=>a-b); }
+
+    function configureMapping(parsed) {
+      const optionHtml=(selected)=>parsed.fields.map(f=>`<option value="${escapeHtml(f.key)}" ${f.key===selected?'selected':''}>${escapeHtml(f.label)}</option>`).join('');
+      $('mapCode').innerHTML=optionHtml('code');
+      $('mapDescription').innerHTML=optionHtml('description');
+      const balanceOptions=[];
+      if (parsed.fields.some(f=>f.key==='balance')) balanceOptions.push(['balance',fieldLabel('balance')]);
+      if (parsed.hasDebit) balanceOptions.push(['debit',fieldLabel('debit')+' · usar apenas esta coluna']);
+      if (parsed.hasCredit) balanceOptions.push(['credit',fieldLabel('credit')+' · usar apenas esta coluna']);
+      if (parsed.hasDebit && parsed.hasCredit) {
+        balanceOptions.push(['net-dc','Saldo líquido · devedor − credor']);
+        balanceOptions.push(['net-cd','Saldo líquido · credor − devedor']);
+        balanceOptions.push(['sum-dc','Somar devedor + credor']);
+      }
+      if (!balanceOptions.length) balanceOptions.push(['balance','Saldo (coluna detectada)']);
+      const defaultBalance=parsed.explicitBalanceColumn&&parsed.fields.some(f=>f.key==='balance')?'balance':parsed.hasDebit&&parsed.hasCredit?'net-dc':'balance';
+      $('mapBalance').innerHTML=balanceOptions.map(([v,l])=>`<option value="${v}" ${v===defaultBalance?'selected':''}>${escapeHtml(l)}</option>`).join('');
+      const max=Math.max(...parsed.grades);
+      $('mapGradeOptions').innerHTML=parsed.grades.map(g=>`<label class="grade-option ${g===max?'selected':''}"><input type="checkbox" name="analyticGrade" value="${g}" ${g===max?'checked':''}><span>Grau ${g}${g===max?' · maior grau':''}</span></label>`).join('');
+      $('gradeHint').textContent=`Foram detectados os graus ${parsed.grades.join(', ')}. Marque um ou mais graus; o maior (${max}) vem selecionado como sugestão.${parsed.ocrPageCount?' Revise códigos e valores do OCR: caracteres parecidos podem ser confundidos.':''}`;
+      $('autoGradeChip').textContent=`Sugestão: grau ${max}`;
+      $('balanceHint').textContent=parsed.explicitBalanceColumn?'Foi detectada uma coluna própria de saldo; ela vem selecionada por padrão. Confira a prévia, especialmente se o PDF tiver saldo inicial e final.':parsed.hasDebit&&parsed.hasCredit?(parsed.inferredColumns?'As colunas de débito e crédito foram inferidas pela posição dos valores; confira o de-para. Padrão: devedor − credor.':'Escolha como converter as colunas devedora e credora em um único saldo. Padrão: devedor − credor.'):'Escolha a coluna de saldo identificada no PDF.';
+      [$('mapCode'),$('mapDescription'),$('mapBalance')].forEach(el=>el.onchange=renderPreview);
+      $('mapGradeOptions').querySelectorAll('input[type="checkbox"]').forEach(input=>input.addEventListener('change',()=>{input.closest('.grade-option').classList.toggle('selected',input.checked);renderPreview();}));
+      renderPreview();
+    }
+
+    function mappedBalance(row) {
+      const selection=$('mapBalance').value;
+      const debit=parseBrazilianNumber(row.debit), credit=parseBrazilianNumber(row.credit);
+      if (selection==='net-dc') return debit-credit;
+      if (selection==='net-cd') return credit-debit;
+      if (selection==='sum-dc') return debit+credit;
+      return parseBrazilianNumber(sourceValue(row,selection));
+    }
+    function getMappedRows() {
+      const targetGrades=new Set(selectedGrades());
+      const hasDebitCredit=state.fields.some(field=>field.key==='debit'||field.key==='credit');
+      return state.sourceRows.filter(row=>targetGrades.has(degree(sourceValue(row,$('mapCode').value))))
+        .map(row=>{
+          const balance=mappedBalance(row);
+          const directBalance=$('mapBalance').value==='balance';
+          const debit=directBalance?Math.max(balance,0):hasDebitCredit?parseBrazilianNumber(row.debit):Math.max(balance,0);
+          const credit=directBalance?Math.max(-balance,0):hasDebitCredit?parseBrazilianNumber(row.credit):Math.max(-balance,0);
+          return {domain:'',code:String(sourceValue(row,$('mapCode').value)||'').trim(),description:String(sourceValue(row,$('mapDescription').value)||'').trim(),balance,debit,credit,similarity:null,related:false};
+        })
+        .filter(row=>row.code && row.description);
+    }
+    function renderPreview() {
+      const rows=getMappedRows();
+      const grades=selectedGrades();
+      const gradeLabel=grades.length>1?`graus ${grades.join(', ')}`:grades.length?`grau ${grades[0]}`:'nenhum grau selecionado';
+      $('previewCount').textContent=`${rows.length} conta${rows.length===1?'':'s'} · ${gradeLabel}`;
+      $('previewBody').innerHTML=rows.slice(0,8).map(row=>`<tr><td></td><td>${escapeHtml(row.code)}</td><td>${escapeHtml(row.description)}</td><td style="text-align:right">${escapeHtml(money(row.balance))}</td></tr>`).join('') || '<tr><td colspan="4" style="text-align:center;color:rgba(240,244,255,.55)">Nenhuma conta neste grau com o mapeamento escolhido.</td></tr>';
+      $('confirmImport').disabled=rows.length===0;
+    }
+
+    function confirmImport() {
+      const rows=getMappedRows();
+      if (!rows.length) return;
+      state.accounts=rows; state.manualAdjustment=null; state.grade=selectedGrades(); state.page=0;
+      const linked=state.domainPlan ? applyDomainPlan() : 0;
+      $('modalBackdrop').classList.remove('open');
+      renderTable();
+      const linkNote=state.domainPlan ? ` ${linked} vinculada${linked===1?'':'s'} ao Plano Domínio.` : '';
+      setStatus(`${rows.length} conta${rows.length===1?'':'s'} importada${rows.length===1?'':'s'} de ${state.fileName}.${linkNote}`);
+      showToast(`${rows.length} conta${rows.length===1?'':'s'} analítica${rows.length===1?'':'s'} importada${rows.length===1?'':'s'}.${linkNote}`);
+    }
+
+    function similarityMarkup(score) {
+      if(score==null||score===''||!Number.isFinite(Number(score)))return '<span class="similarity-missing">—</span>';
+      const percent=Math.round(Math.max(0,Math.min(1,Number(score)))*100);
+      return `<span class="similarity-widget" title="Similaridade da descrição usada no vínculo Domínio"><span class="similarity-track"><i class="similarity-fill" style="width:${percent}%"></i></span><span class="similarity-value">${percent}%</span></span>`;
+    }
+
+    let activeColumnFilterMenu=null;
+    function closeColumnFilterMenu(){if(activeColumnFilterMenu){activeColumnFilterMenu.remove();activeColumnFilterMenu=null;}}
+    function columnFilterValue(row,key){
+      if(key==='domain')return String(row.domain||'').trim();
+      if(key==='code')return String(row.code||'').trim();
+      if(key==='description')return String(row.description||'').trim();
+      if(key==='balance')return money(row.balance);
+      if(key==='similarity')return row.similarity==null?'':`${Math.round(Number(row.similarity)*100)}%`;
+      if(key==='relation')return row.related?'Relacionada':row.domain?'Revisar':'Sem vínculo';
+      return '';
+    }
+    function filterHeaderMarkup(label,key,align='left'){
+      return `<th class="filterable-header" data-column="${key}" style="text-align:${align}"><span>${label}</span><button class="column-filter-trigger ${state.columnFilters[key]?'active':''}" type="button" data-filter-trigger="${key}" aria-label="Filtrar ${label}" title="Filtrar ${label}"><svg viewBox="0 0 24 24" fill="none"><path d="m7 9 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></th>`;
+    }
+    function matchesColumnFilters(row){
+      return Object.entries(state.columnFilters).every(([key,selected])=>!selected||normalize(columnFilterValue(row,key))===normalize(selected));
+    }
+    function renderFilterValues(menu,key,query=''){
+      const selected=state.columnFilters[key], values=[...new Set(state.accounts.map(row=>columnFilterValue(row,key)))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+      const filtered=values.filter(value=>normalize(value||'(vazio)').includes(normalize(query)));
+      menu.querySelector('.column-filter-values').innerHTML=filtered.length?filtered.map(value=>`<button class="column-filter-value ${selected===value?'selected':''}" type="button" data-filter-value="${escapeHtml(value)}">${escapeHtml(value||'(vazio)')}</button>`).join(''):'<div class="column-filter-empty">Nenhum valor encontrado.</div>';
+      menu.querySelectorAll('[data-filter-value]').forEach(button=>button.addEventListener('click',()=>{state.columnFilters[key]=button.dataset.filterValue;state.page=0;closeColumnFilterMenu();renderTable();}));
+    }
+    function openColumnFilter(key,trigger){
+      closeColumnFilterMenu();
+      const menu=document.createElement('div');menu.className='column-filter-menu';
+      menu.innerHTML=`<strong>Filtrar coluna</strong><input class="column-filter-search" type="search" placeholder="Pesquisar valores…" aria-label="Pesquisar valores"><div class="column-filter-actions"><button class="column-filter-action" type="button" data-filter-clear>Limpar</button><button class="column-filter-action" type="button" data-filter-all>Todos</button></div><div class="column-filter-values"></div>`;
+      document.body.appendChild(menu);activeColumnFilterMenu=menu;
+      const rect=trigger.getBoundingClientRect(),left=Math.min(Math.max(10,rect.right-230),window.innerWidth-240),top=Math.min(rect.bottom+7,window.innerHeight-340);menu.style.left=`${left}px`;menu.style.top=`${Math.max(10,top)}px`;
+      renderFilterValues(menu,key);
+      menu.querySelector('.column-filter-search').addEventListener('input',e=>renderFilterValues(menu,key,e.target.value));
+      menu.querySelector('[data-filter-clear]').addEventListener('click',()=>{state.columnFilters[key]='';state.page=0;closeColumnFilterMenu();renderTable();});
+      menu.querySelector('[data-filter-all]').addEventListener('click',()=>{state.columnFilters[key]='';state.page=0;closeColumnFilterMenu();renderTable();});
+      menu.addEventListener('click',e=>e.stopPropagation());
+    }
+    function setupTableInteractions(){
+      const table=$('tableContent').querySelector('table');if(!table)return;
+      table.querySelectorAll('[data-filter-trigger]').forEach(button=>button.addEventListener('click',e=>{e.stopPropagation();openColumnFilter(button.dataset.filterTrigger,button);}));
+      table.querySelectorAll('th[data-column]').forEach(th=>{
+        const key=th.dataset.column,width=state.columnWidths[key];
+        if(width)Array.from(table.rows).forEach(row=>{if(row.cells[th.cellIndex])row.cells[th.cellIndex].style.width=`${width}px`;});
+        const handle=document.createElement('i');handle.className='column-resizer';handle.setAttribute('aria-hidden','true');th.appendChild(handle);
+        handle.addEventListener('mousedown',event=>{
+          event.preventDefault();event.stopPropagation();const startX=event.clientX,startWidth=th.getBoundingClientRect().width;
+          handle.classList.add('dragging');
+          const move=moveEvent=>{const next=Math.max(72,startWidth+moveEvent.clientX-startX);state.columnWidths[key]=Math.round(next);Array.from(table.rows).forEach(row=>{if(row.cells[th.cellIndex])row.cells[th.cellIndex].style.width=`${next}px`;});};
+          const stop=()=>{handle.classList.remove('dragging');document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',stop);};
+          document.addEventListener('mousemove',move);document.addEventListener('mouseup',stop);
+        });
+      });
+    }
+
+    function renderTable() {
+      closeColumnFilterMenu();
+      const query=normalize($('searchInput').value);
+      $('countStat').textContent=String(state.accounts.length);
+      const accountDebits=state.accounts.reduce((sum,row)=>sum+(Number(row.debit)||0),0);
+      const accountCredits=state.accounts.reduce((sum,row)=>sum+(Number(row.credit)||0),0);
+      $('debitStat').textContent=money(state.pdfTotals?.explicit?state.pdfTotals.debit:accountDebits);
+      $('creditStat').textContent=money(state.pdfTotals?.explicit?state.pdfTotals.credit:accountCredits);
+      $('reviewLegend').classList.toggle('visible',Boolean(state.domainPlan));
+      const suggested=state.accounts.filter(row=>String(row.domain||'').trim()).length;
+      const confirmed=state.accounts.filter(row=>row.related).length;
+      const relationSummary=state.domainPlan?` · ${suggested} código${suggested===1?'':'s'} sugerido${suggested===1?'':'s'} · ${confirmed} confirmado${confirmed===1?'':'s'}`:'';
+      const gradeLabel=(state.grade||[]).length>1?`graus ${(state.grade||[]).join(', ')}`:`grau ${(state.grade||[])[0]??'—'}`;
+      $('tableSubtitle').textContent=`${state.fileName} · ${gradeLabel}${relationSummary}`;
+      $('searchInput').disabled=false; $('exportBtn').disabled=false;
+      const rows=state.accounts.map((row,index)=>({row,index})).filter(({row})=>normalize(`${row.domain} ${row.code} ${row.description}`).includes(query)).filter(({row})=>matchesColumnFilters(row));
+      const pageCount=Math.max(1,Math.ceil(rows.length/state.pageSize));
+      state.page=Math.min(state.page,pageCount-1);
+      if (!rows.length) {
+        $('tableContent').className='empty';
+        $('tableContent').innerHTML='<div><strong>Nenhuma conta encontrada</strong><p>Tente outro termo de busca.</p></div>';
+        $('pager').classList.remove('visible'); return;
+      }
+      const start=state.page*state.pageSize;
+      const visibleRows=rows.slice(start,start+state.pageSize);
+      $('tableContent').className='table-wrap';
+      $('tableContent').innerHTML=`<table><thead><tr>${filterHeaderMarkup('Cód. domínio','domain')}${filterHeaderMarkup('Cód. conta','code')}${filterHeaderMarkup('Descrição','description')}${filterHeaderMarkup('Saldo','balance','right')}<th class="action-cell" data-column="action" aria-label="Ações"></th></tr></thead><tbody>${visibleRows.map(({row,index})=>`<tr><td class="domain"><input class="cell-input" data-edit="domain" data-index="${index}" aria-label="Código Domínio da conta ${escapeHtml(row.code)}" value="${escapeHtml(row.domain||'')}"></td><td class="code"><input class="cell-input code-input" data-edit="code" data-index="${index}" aria-label="Código da conta" value="${escapeHtml(row.code)}"></td><td class="description"><input class="cell-input" data-edit="description" data-index="${index}" aria-label="Descrição da conta" value="${escapeHtml(row.description)}"></td><td class="amount"><input class="cell-input amount-input" data-edit="balance" data-index="${index}" aria-label="Saldo da conta" value="${escapeHtml(money(row.balance))}"></td><td class="action-cell"><button class="delete-row" data-delete="${index}" type="button" aria-label="Excluir conta ${escapeHtml(row.code)}" title="Excluir linha"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 7h15M9 7V4.8h6V7m-8.5 0 .8 12h9.4l.8-12M10 10.5v5.5m4-5.5v5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></td></tr>`).join('')}</tbody></table>`;
+      const headRow=$('tableContent').querySelector('thead tr');
+      const similarityTemplate=document.createElement('template'); similarityTemplate.innerHTML=filterHeaderMarkup('Similaridade','similarity');
+      const similarityHeader=similarityTemplate.content.firstElementChild; similarityHeader.title='Percentual de semelhança da descrição usada no vínculo Domínio';
+      headRow.insertBefore(similarityHeader,headRow.children[3]);
+      const relationTemplate=document.createElement('template'); relationTemplate.innerHTML=filterHeaderMarkup('Relacionar','relation');
+      const relationHeader=relationTemplate.content.firstElementChild;
+      headRow.insertBefore(relationHeader,headRow.lastElementChild);
+      $('tableContent').querySelectorAll('tbody tr').forEach((tr,index)=>{
+        const {row,index:accountIndex}=visibleRows[index];
+        const cell=document.createElement('td'); cell.className='similarity'; cell.innerHTML=similarityMarkup(row.similarity);
+        tr.insertBefore(cell,tr.children[3]);
+        const relationCell=document.createElement('td'); relationCell.className='relation-cell';
+        if(state.domainPlan){
+          tr.classList.add(row.related?'row-related':row.domain?'row-review':'row-missing');
+          const label=row.related?'Relacionada':row.domain?'Confirmar vínculo':'Informe código';
+          relationCell.innerHTML=`<label class="relation-control"><input type="checkbox" data-related="${accountIndex}" aria-label="Marcar ${escapeHtml(row.code)} como relacionada" ${row.related?'checked':''} ${row.domain?'':'disabled'}><span>${label}</span></label>`;
+        }else{
+          relationCell.innerHTML='<span class="relation-na">—</span>';
+        }
+        tr.insertBefore(relationCell,tr.lastElementChild);
+      });
+      $('pager').classList.add('visible');
+      $('pageRange').textContent=`Mostrando ${start+1}–${Math.min(start+state.pageSize,rows.length)} de ${rows.length} conta${rows.length===1?'':'s'}`;
+      $('pageIndicator').textContent=`${state.page+1} / ${pageCount}`;
+      $('prevPage').disabled=state.page===0; $('nextPage').disabled=state.page>=pageCount-1;
+      $('tableContent').querySelectorAll('[data-edit]').forEach(input=>{
+        input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.blur();}if(e.key==='Escape'){e.preventDefault();input.value=input.defaultValue;input.blur();}});
+        input.addEventListener('change',()=>{
+          const index=Number(input.dataset.index), field=input.dataset.edit;
+          if(!state.accounts[index])return;
+          if(field==='balance')state.accounts[index].balance=parseBrazilianNumber(input.value);
+          else {state.accounts[index][field]=input.value.trim();state.accounts[index].similarity=null;state.accounts[index].related=false;}
+          renderTable();
+        });
+      });
+      $('tableContent').querySelectorAll('[data-related]').forEach(input=>input.addEventListener('change',()=>{
+        const index=Number(input.dataset.related),account=state.accounts[index];
+        if(!account)return;
+        if(input.checked&&!String(account.domain||'').trim()){
+          input.checked=false;showToast('Informe o código Domínio antes de marcar a conta como relacionada.');return;
+        }
+        account.related=input.checked;renderTable();
+        showToast(account.related?'Vínculo confirmado.':'Vínculo marcado para revisão.');
+      }));
+      $('tableContent').querySelectorAll('[data-delete]').forEach(button=>button.addEventListener('click',()=>{
+        const index=Number(button.dataset.delete), removed=state.accounts[index];
+        if(!removed)return;
+        state.accounts.splice(index,1); renderTable(); showToast(`Conta ${removed.code} excluída.`);
+      }));
+      setupTableInteractions();
+    }
+
+    function excelColumn(index) {
+      let n=index+1, name='';
+      while(n){const rem=(n-1)%26;name=String.fromCharCode(65+rem)+name;n=Math.floor((n-1)/26);}
+      return name;
+    }
+
+    function readGroupChoices() {
+      return Object.fromEntries([1,2,3,4,5,6].map(digit=>[String(digit),$(`groupDigit${digit}`).value]));
+    }
+
+    function openGroupPopup() {
+      for(const digit of [1,2,3,4,5,6])$(`groupDigit${digit}`).value=state.groupMapping[String(digit)]||String(digit);
+      $('groupModalBackdrop').classList.add('open');
+    }
+
+    function continuePlanImport() {
+      state.pendingGroupMapping=readGroupChoices();
+      planFileInput.click();
+    }
+
+    function detectPlanHeader(grid) {
+      let best={row:-1,code:-1,classification:-1,description:-1,type:-1,score:0};
+      for(let r=0;r<Math.min(grid.length,40);r++){
+        const labels=(grid[r]||[]).map(v=>normalizeWords(v));
+        const classification=labels.findIndex(v=>v.includes('classific')||v.includes('estrutura contabil'));
+        let code=labels.findIndex(v=>v.includes('reduzid')||(/cod/.test(v)&&/(conta|red)/.test(v)));
+        let description=labels.findIndex(v=>(v.includes('descri')||v==='nome'||v.includes('nome da conta'))&&v!==labels[classification]);
+        if(description<0)description=labels.findIndex(v=>v.includes('conta')&&!v.includes('classific')&&!v.includes('reduz')&&v!==labels[code]);
+        const type=labels.findIndex(v=>v.includes('tipo conta')||v==='tipo');
+        const hits=[code,classification,description].filter(i=>i>=0).length;
+        const score=hits*3+(hits===3?10:0);
+        if(score>best.score)best={row:r,code,classification,description,type,score};
+        if(hits===3)return {row:r,code,classification,description,type};
+      }
+      return best.score>=6?best:{row:-1,code:-1,classification:-1,description:-1,type:-1};
+    }
+
+    function configurePlanSheet(sheetName) {
+      const ws=state.planWorkbook?.Sheets[sheetName];
+      if(!ws)throw new Error('Não consegui abrir a aba selecionada do Plano Domínio.');
+      state.planSheetName=sheetName;
+      state.planGrid=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+      const detected=detectPlanHeader(state.planGrid);
+      state.planHeaderRow=detected.row;
+      state.planTypeIndex=detected.type??-1;
+      const width=Math.max(0,...state.planGrid.map(row=>row.length));
+      const exampleRows=state.planGrid.slice(Math.max(0,state.planHeaderRow+1),Math.max(0,state.planHeaderRow+4));
+      state.planColumns=Array.from({length:width},(_,i)=>{
+        const title=state.planHeaderRow>=0?String(state.planGrid[state.planHeaderRow]?.[i]??'').trim():'';
+        const sample=exampleRows.map(row=>String(row[i]??'').trim()).find(Boolean)||'';
+        return {index:i,label:`${excelColumn(i)} · ${title||sample||'Coluna vazia'}`,title,sample};
+      });
+      const options=state.planColumns.map(c=>`<option value="${c.index}">${escapeHtml(c.label)}</option>`).join('');
+      for(const id of ['planCode','planClass','planDescription'])$(id).innerHTML=options;
+      const defaults={planCode:detected.code,planClass:detected.classification,planDescription:detected.description};
+      for(const [id,index] of Object.entries(defaults)){
+        const select=$(id); if(index>=0&&index<width)select.value=String(index); else if(width)select.selectedIndex=Math.min(id==='planDescription'?2:id==='planClass'?1:0,width-1);
+      }
+      $('planFileLabel').textContent=`${state.planFileName} · aba “${sheetName}” · ${state.planGrid.length} linha(s) lida(s). Revise as colunas sugeridas antes de aplicar.`;
+      if(state.planTypeIndex>=0)$('planFileLabel').textContent+=' A coluna tipo_conta foi detectada; serão consideradas somente contas analíticas (A) do maior grau de classificação. Contas sintéticas (S) serão descartadas.';
+      else $('planFileLabel').textContent+=' A coluna tipo_conta não foi detectada; o sistema inferirá as contas analíticas pelas folhas da classificação e manterá apenas o maior grau.';
+      updatePlanPreview();
+    }
+
+    async function readPlanFile(file) {
+      if(!file)throw new Error('Selecione um arquivo Excel.');
+      if(!window.XLSX)throw new Error('Não foi possível carregar o leitor de Excel. Verifique a conexão com a internet e recarregue a página.');
+      if(file.size>25*1024*1024)throw new Error('O arquivo Excel excede o limite de 25 MB.');
+      $('planBtn').disabled=true; setStatus('Lendo o Plano Domínio no navegador…');
+      try{
+        const data=await file.arrayBuffer();
+        state.planWorkbook=XLSX.read(data,{type:'array',cellText:true,cellDates:false});
+        state.planFileName=file.name;
+        if(!state.planWorkbook.SheetNames.length)throw new Error('A planilha não contém abas para leitura.');
+        if(state.pendingGroupMapping)state.groupMapping={...state.pendingGroupMapping};
+        $('planSheet').innerHTML=state.planWorkbook.SheetNames.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+        configurePlanSheet(state.planWorkbook.SheetNames[0]);
+        state.pendingGroupMapping=null;
+        $('groupModalBackdrop').classList.remove('open');
+        $('planModalBackdrop').classList.add('open');
+        setStatus('Plano Domínio lido localmente. Revise o mapeamento das colunas e confirme para associar as contas.');
+      }finally{$('planBtn').disabled=false;}
+    }
+
+    function classificationDegree(value,classKeys=null) {
+      const text=String(value??'').trim();
+      if(!text)return 0;
+      if(/[.\/-]/.test(text))return text.split(/[.\/-]+/).filter(Boolean).length;
+      const key=classificationKey(text);
+      if(classKeys){
+        let depth=1;
+        for(let i=1;i<key.length;i++)if(classKeys.has(key.slice(0,i)))depth++;
+        return depth;
+      }
+      return key.length;
+    }
+
+    function isAnalyticPlanType(value) {
+      const type=String(value??'').trim().toUpperCase();
+      return type==='A'||/^A[\s\-]/.test(type)||/ANAL[IÍ]TIC/.test(type);
+    }
+
+    function classificationKey(value) {
+      return String(value??'').trim().toUpperCase().replace(/[.\/-\s]/g,'');
+    }
+
+    function getPlanEntries() {
+      const codeIndex=Number($('planCode').value),classIndex=Number($('planClass').value),descriptionIndex=Number($('planDescription').value);
+      const start=state.planHeaderRow>=0?state.planHeaderRow+1:0;
+      const entries=state.planGrid.slice(start).map(row=>({
+        reducedCode:String(row[codeIndex]??'').trim(),
+        classification:String(row[classIndex]??'').trim(),
+        description:String(row[descriptionIndex]??'').trim(),
+        type:state.planTypeIndex>=0?String(row[state.planTypeIndex]??'').trim().toUpperCase():''
+      })).filter(row=>row.reducedCode&&row.classification&&row.description);
+      const classKeys=new Set(entries.map(row=>classificationKey(row.classification)));
+      let analytic=[];
+      if(state.planTypeIndex>=0){
+        analytic=entries.filter(row=>isAnalyticPlanType(row.type));
+      }else{
+        const parentKeys=new Set();
+        for(const key of classKeys)for(let i=1;i<key.length;i++)if(classKeys.has(key.slice(0,i)))parentKeys.add(key.slice(0,i));
+        analytic=entries.filter(row=>!parentKeys.has(classificationKey(row.classification)));
+      }
+      if(!analytic.length){state.planHighestDegree=0;return [];}
+      const highestDegree=analytic.reduce((max,row)=>Math.max(max,classificationDegree(row.classification,classKeys)),0);
+      state.planHighestDegree=highestDegree;
+      return analytic.filter(row=>classificationDegree(row.classification,classKeys)===highestDegree);
+    }
+
+    function bigramDice(a,b) {
+      const pairs=s=>{const out=[];for(let i=0;i<s.length-1;i++)out.push(s.slice(i,i+2));return out;};
+      const aa=pairs(a),bb=pairs(b);if(!aa.length||!bb.length)return a===b?1:0;
+      const counts=new Map();for(const x of aa)counts.set(x,(counts.get(x)||0)+1);
+      let overlap=0;for(const x of bb){const n=counts.get(x)||0;if(n){overlap++;counts.set(x,n-1);}}
+      return 2*overlap/(aa.length+bb.length);
+    }
+
+    function similarityWords(value) {
+      return normalizeWords(value).split(' ').filter(Boolean).map(token=>token.length>4&&token.endsWith('s')?token.slice(0,-1):token).join(' ');
+    }
+
+    function descriptionSimilarity(a,b) {
+      const left=similarityWords(a),right=similarityWords(b);
+      if(!left||!right)return 0;if(left===right)return 1;
+      const aTokens=new Set(left.split(' ')),bTokens=new Set(right.split(' '));
+      let common=0;for(const token of aTokens)if(bTokens.has(token))common++;
+      const containment=common/Math.max(1,Math.min(aTokens.size,bTokens.size));
+      const dice=bigramDice(left,right);
+      return Math.max(.68*containment+.32*dice,.58*(common/Math.max(1,new Set([...aTokens,...bTokens]).size))+.42*dice);
+    }
+
+    function findDomainMatch(account,entries,threshold,groupMapping=state.groupMapping) {
+      const firstDigit=value=>String(value??'').trim().match(/\d/)?.[0]||'';
+      const digit=firstDigit(account.code);
+      if(!digit)return {entry:null,reason:'Sem classificação inicial'};
+      const selectedGroup=groupMapping[digit]||'6';
+      const candidates=entries.filter(entry=>!/^S/i.test(String(entry.type||'').trim())&&(groupMapping[firstDigit(entry.classification)]||'6')===selectedGroup)
+        .map(entry=>({entry,score:descriptionSimilarity(account.description,entry.description)}))
+        .sort((a,b)=>b.score-a.score);
+      if(!candidates.length)return {entry:null,reason:'Grupo contábil diferente'};
+      if(candidates[0].score<threshold)return {entry:null,reason:'Descrição abaixo do limite'};
+      const near=candidates.filter(candidate=>candidates[0].score-candidate.score<.025);
+      if(near.length>1&&near.some(candidate=>candidate.entry.reducedCode!==candidates[0].entry.reducedCode)){
+        const analytic=near.filter(candidate=>/^A/.test(candidate.entry.type||''));
+        if(analytic.length===1&&near.every(candidate=>normalizeWords(candidate.entry.description)===normalizeWords(analytic[0].entry.description)))
+          return {entry:analytic[0].entry,score:analytic[0].score,reason:'Correspondência analítica sugerida'};
+        return {entry:null,reason:'Mais de uma conta semelhante'};
+      }
+      return {entry:candidates[0].entry,score:candidates[0].score,reason:'Correspondência sugerida'};
+    }
+
+    function updatePlanPreview() {
+      const entries=getPlanEntries();
+      const threshold=Number($('planThreshold').value)||.55;
+      if(state.accounts.length){
+        const matches=state.accounts.map(account=>({account,...findDomainMatch(account,entries,threshold)}));
+        const linked=matches.filter(m=>m.entry).length;
+        $('planPreviewCount').textContent=`${linked} de ${matches.length} conta(s) vinculada(s)`;
+        $('planPreviewBody').innerHTML=matches.slice(0,10).map(m=>`<tr><td>${escapeHtml(m.account.code)}</td><td>${escapeHtml(m.account.description)}</td><td>${escapeHtml(m.entry?.reducedCode||'—')}</td><td>${m.entry?`${Math.round(m.score*100)}% · ${escapeHtml(m.entry.description)}`:escapeHtml(m.reason)}</td></tr>`).join('');
+        $('planMatchNote').textContent=`O cruzamento usa somente contas analíticas do maior grau; exige o mesmo grupo configurado para o primeiro dígito e semelhança mínima de ${Math.round(threshold*100)}%. ${matches.length-linked} conta(s) sem sugestão segura permanecerão sem código Domínio.`;
+      }else{
+        const highestDegree=state.planHighestDegree||0;
+        $('planPreviewCount').textContent=`${entries.length} conta(s) analíticas no maior grau (${highestDegree})`;
+        $('planPreviewBody').innerHTML=entries.slice(0,8).map(row=>`<tr><td>—</td><td>${escapeHtml(row.description)}</td><td>${escapeHtml(row.reducedCode)}</td><td>Classificação ${escapeHtml(row.classification)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center">Mapeie as colunas para visualizar as contas do plano.</td></tr>';
+        $('planMatchNote').textContent='Somente contas analíticas (A), ou folhas da classificação quando tipo_conta não existir, no maior grau serão usadas para relacionamento e lançamentos.';
+      }
+      $('confirmPlan').disabled=entries.length===0;
+    }
+
+    function applyDomainPlan() {
+      if(!state.domainPlan)return 0;
+      let linked=0;
+      for(const account of state.accounts){
+        const match=findDomainMatch(account,state.domainPlan.entries,state.domainPlan.threshold,state.domainPlan.groupMapping);
+        account.domain=match.entry?.reducedCode||'';
+        account.similarity=match.entry?match.score:null;
+        account.related=Boolean(match.entry&&Math.round(match.score*100)>=80);
+        if(match.entry)linked++;
+      }
+      return linked;
+    }
+
+    function confirmPlan() {
+      const entries=getPlanEntries();if(!entries.length)return;
+      state.domainPlan={name:state.planFileName,sheet:state.planSheetName,entries,threshold:Number($('planThreshold').value)||.55,groupMapping:{...state.groupMapping}};
+      const linked=state.accounts.length?applyDomainPlan():0;
+      $('planModalBackdrop').classList.remove('open');
+      if(state.accounts.length)renderTable();
+      const note=state.accounts.length?`${linked} de ${state.accounts.length} conta(s) vinculada(s).`:'O plano será aplicado automaticamente quando um balancete for importado.';
+      setStatus(`Plano Domínio “${state.planFileName}” aplicado. ${note}`);
+      showToast(note);
+    }
+
+    function suggestCompanyRegistration() {
+      for(const line of state.rawLines.slice(0,20)){
+        if(!/\b(?:CNPJ|CPF|CEI|CAEPF)\b/i.test(line))continue;
+        const chunks=line.match(/\d[\d.\/-\s]{9,24}\d/g)||[];
+        for(const chunk of chunks){const digits=chunk.replace(/\D/g,'');if([11,12,14].includes(digits.length))return digits;}
+      }
+      return '';
+    }
+
+    function suggestPostingDate() {
+      const text=state.rawLines.slice(0,20).join(' ');
+      const dates=[...text.matchAll(/\b(\d{2})\/(\d{2})\/(\d{4})\b/g)];
+      let match=dates.at(-1);
+      if(!match){
+        const filename=state.fileName.match(/(\d{2})[_-](\d{2})[_-](\d{4})/);
+        if(filename)match=filename;
+      }
+      return match?`${match[3]}-${match[2]}-${match[1]}`:'';
+    }
+
+    function dateToBrazilian(value) {
+      const match=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      return match?`${match[3]}/${match[2]}/${match[1]}`:'';
+    }
+
+    function getDomainAccountMap() {
+      const map=new Map();
+      for(const entry of state.domainPlan?.entries||[]){
+        const code=String(entry.reducedCode||'').trim();
+        if(!/^\d+$/.test(code))continue;
+        const previous=map.get(code),type=String(entry.type||'').trim().toUpperCase(),previousType=previous?.type||'';
+        if(!previous||(/^A/.test(type)&&!/^A/.test(previousType))||(/^S/.test(previousType)&&!/^S/.test(type)))
+          map.set(code,{code,description:String(entry.description||'').trim(),type,balance:0,sourceCount:0});
+      }
+      return map;
+    }
+
+    function getPdfTotalReconciliation() {
+      const accounts=state.accounts.map((row,index)=>({...row,balance:Number(row.balance),sourceIndex:index}));
+      const debits=accounts.reduce((sum,row)=>sum+Math.max(Number(row.balance)||0,0),0);
+      const credits=accounts.reduce((sum,row)=>sum+Math.max(-(Number(row.balance)||0),0),0);
+      return {accounts,debits,credits,difference:Math.abs(debits-credits)};
+    }
+
+    function getDomainPostingRows() {
+      const map=getDomainAccountMap();
+      const reconciled=getPdfTotalReconciliation();
+      return reconciled.accounts.map(account=>{
+        const code=String(account.domain||'').trim(),domainAccount=map.get(code);
+        if(!domainAccount||/^S/.test(domainAccount.type||''))return null;
+        return {code:domainAccount.code,description:domainAccount.description,balance:Number(account.balance)||0,sourceCount:1,sourceCode:account.code,sourceDescription:account.description,sourceIndex:account.sourceIndex};
+      }).filter(Boolean);
+    }
+
+    function getInvalidDomainMappings() {
+      const map=getDomainAccountMap();
+      return state.accounts.filter(account=>{
+        if(!account.related)return false;
+        const code=String(account.domain||'').trim(),entry=map.get(code);
+        return !/^\d+$/.test(code)||!entry||/^S/.test(entry.type||'');
+      });
+    }
+
+    function updateTxtPreview() {
+      const domainRows=getDomainPostingRows();
+      const previewRows=state.manualAdjustment?[...domainRows,{code:state.manualAdjustment.code,description:state.manualAdjustment.history,sourceCode:state.manualAdjustment.historyCode,sourceDescription:'Lançamento manual de ajuste',balance:state.manualAdjustment.amount}]:domainRows;
+      const postingRows=previewRows.filter(row=>Math.abs(row.balance)>.00001);
+      const distinctDomainCodes=new Set(previewRows.map(row=>row.code)).size;
+      $('domainExportCount').textContent=`${postingRows.length} registro(s) 6100 · ${previewRows.length} conta(s) mapeada(s) · ${distinctDomainCodes} código(s) Domínio`;
+      $('domainExportBody').innerHTML=previewRows.map(row=>`<tr><td>${escapeHtml(row.code)}</td><td>${escapeHtml(row.description)}</td><td>${escapeHtml(row.sourceCode)} · ${escapeHtml(row.sourceDescription)}</td><td style="text-align:right">${money(row.balance)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center">Aplique o Plano Domínio e associe os saldos para visualizar as contas de saída.</td></tr>';
+      $('txtPreview').textContent='';
+      $('txtPreview').className='txt-preview';
+      $('generateTxtBtn').disabled=!state.accounts.length;
+      $('generateTxtBtn').textContent='Gerar TXT';
+    }
+
+    function openTxtModal() {
+      if(!state.accounts.length){showToast('Importe e confirme um balancete antes de gerar o arquivo.');return;}
+      if(state.txtPrefillFileName!==state.fileName){
+        $('txtCompanyId').value=suggestCompanyRegistration();
+        $('txtPostingDate').value=suggestPostingDate();
+        $('txtCompanyHint').textContent=$('txtCompanyId').value?'Inscrição detectada no cabeçalho; confira antes de gerar.':'Não foi detectada inscrição no cabeçalho; informe CNPJ/CPF/CEI/CAEPF somente com números.';
+        state.txtPrefillFileName=state.fileName;
+      }
+      $('txtModalBackdrop').classList.add('open');
+      updateTxtPreview();
+    }
+
+    function getAccountTotals() {
+      const debits=state.accounts.reduce((sum,row)=>sum+Math.max(Number(row.balance)||0,0),0);
+      const credits=state.accounts.reduce((sum,row)=>sum+Math.max(-(Number(row.balance)||0),0),0);
+      return {debits,credits};
+    }
+
+    function getBalanceTotals() {
+      const base=getAccountTotals(),adjustment=Number(state.manualAdjustment?.amount)||0;
+      const debits=base.debits+Math.max(adjustment,0),credits=base.credits+Math.max(-adjustment,0);
+      return {debits,credits,difference:Math.abs(debits-credits)};
+    }
+
+    function prepareAdjustmentForm() {
+      const adjustment=state.manualAdjustment,base=getAccountTotals(),difference=Math.abs(base.debits-base.credits);
+      $('adjustmentCode').value=adjustment?.code||'';
+      $('adjustmentDate').value=adjustment?.date||suggestPostingDate()||'';
+      $('adjustmentAmount').value=adjustment?new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(adjustment.amount):(base.debits>base.credits?'-':'')+new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(difference);
+      $('adjustmentHistoryCode').value=adjustment?.historyCode||'';
+      $('adjustmentHistory').value=adjustment?.history||'';
+    }
+
+    function openAdjustmentForm() {
+      prepareAdjustmentForm();
+      $('adjustmentForm').classList.add('visible');
+      setTimeout(()=>$('adjustmentCode').focus(),80);
+    }
+
+    function closeAdjustmentForm() { $('adjustmentForm').classList.remove('visible'); }
+
+    function saveAdjustment() {
+      const code=String($('adjustmentCode').value||'').trim(),date=String($('adjustmentDate').value||''),amount=parseBrazilianNumber($('adjustmentAmount').value),historyCode=String($('adjustmentHistoryCode').value||'').trim(),history=String($('adjustmentHistory').value||'').trim();
+      if(!/^\d+$/.test(code)||!date||!Number.isFinite(amount)||Math.abs(amount)<=.005||!historyCode||!history){showToast('Preencha código reduzido, data, valor, código e histórico do ajuste.');return;}
+      state.manualAdjustment={code,date,amount,historyCode,history};
+      closeAdjustmentForm();
+      renderValidation();
+      updateTxtPreview();
+      showToast('Lançamento de ajuste aplicado e incluído no TXT.');
+    }
+
+    function getValidationIssues() {
+      if(!state.accounts.length)return [{title:'Nenhuma conta importada',detail:'Importe e confirme um balancete antes de validar.'}];
+      const issues=[];
+      const incomplete=state.accounts.filter(row=>!String(row.code||'').trim()||!String(row.description||'').trim()||!Number.isFinite(Number(row.balance)));
+      if(incomplete.length)issues.push({title:`${incomplete.length} linha(s) incompleta(s)`,detail:'Preencha o código da conta, a descrição e o saldo de todas as linhas.'});
+      const {debits,credits}=getBalanceTotals();
+      if(Math.abs(debits-credits)>.005)issues.push({title:'Total dos débitos diferente do total dos créditos',detail:`Débitos: ${money(debits)} · Créditos: ${money(credits)}.`});
+      return issues;
+    }
+
+    function renderValidation() {
+      const issues=getValidationIssues();
+      $('validationBody').innerHTML=issues.length
+        ?issues.map(issue=>`<div class="validation-issue"><strong>${escapeHtml(issue.title)}</strong><p>${escapeHtml(issue.detail)}</p></div>`).join('')
+        :`<div class="validation-state">Validação concluída: todas as linhas estão preenchidas e o total dos débitos bate com o total dos créditos.${state.manualAdjustment?' O lançamento de ajuste foi incluído no TXT.':''}</div>`;
+      $('validationHint').textContent='Validação limitada a preenchimento das linhas e igualdade entre débitos e créditos.';
+    }
+
+    function openValidationModal() { renderValidation(); $('validationModalBackdrop').classList.add('open'); }
+
+    function handleGenerateTxt() {
+      updateTxtPreview();
+      const registration=String($('txtCompanyId').value||'').replace(/\D/g,'');
+      const date=dateToBrazilian($('txtPostingDate').value||suggestPostingDate());
+      const domainRows=getDomainPostingRows();
+      const omittedCount=Math.max(0,state.accounts.length-domainRows.length);
+      generateTxt({registration,date,domainRows,omittedCount});
+    }
+
+    function generateTxt({registration,date,domainRows,omittedCount}) {
+      const record=fields=>fields.join('|')+'|';
+      const lines=[record(['0000',registration]),record(['6000','V','','',''])];
+      for(const account of domainRows){
+        const balance=Number(account.balance)||0;
+        if(Math.abs(balance)<.00001)continue;
+        const code=account.code;
+        const debitCode=balance>0?code:'';
+        const creditCode=balance<0?code:'';
+        const amount=Math.abs(balance).toFixed(2).replace('.',',');
+        lines.push(record(['6100',date,debitCode,creditCode,amount,'','IMPORTADO APP','','','']));
+      }
+      if(state.manualAdjustment){
+        const adjustment=state.manualAdjustment,amount=Math.abs(Number(adjustment.amount)||0).toFixed(2).replace('.',','),debitCode=adjustment.amount>0?adjustment.code:'',creditCode=adjustment.amount<0?adjustment.code:'';
+        lines.push(record(['6100',dateToBrazilian(adjustment.date),debitCode,creditCode,amount,adjustment.historyCode,adjustment.history,'','','']));
+      }
+      const content=lines.join('\r\n')+'\r\n';
+      const blob=new Blob([content],{type:'text/plain;charset=utf-8'});
+      const url=URL.createObjectURL(blob),link=document.createElement('a');
+      link.href=url;link.download=(state.fileName.replace(/\.pdf$/i,'')||'balancete')+'_importacao_dominio.txt';
+      document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+      $('txtModalBackdrop').classList.remove('open');
+      const omitted=omittedCount?` ${omittedCount} conta(s) sem código reduzido Domínio foram omitidas.`:'';
+      const missingRegistration=registration?'': ' A inscrição da empresa ficou em branco.';
+      showToast(`Arquivo TXT Domínio gerado. Importe pelo leiaute Domínio Sistemas com Separador.${omitted}${missingRegistration}`);
+    }
+
+    $('chooseBtn').addEventListener('click',()=>fileInput.click());
+    fileInput.addEventListener('change',async(e)=>{try{if(e.target.files[0])await readPdf(e.target.files[0]);}catch(err){setStatus(err.message||'Erro ao ler PDF.',true);showToast(err.message||'Erro ao ler PDF.');}finally{fileInput.value='';}});
+    $('planBtn').addEventListener('click',openGroupPopup);
+    $('continuePlanImport').addEventListener('click',continuePlanImport);
+    const closeGroupPopup=()=>{$('groupModalBackdrop').classList.remove('open');state.pendingGroupMapping=null;};
+    $('closeGroupModal').addEventListener('click',closeGroupPopup);
+    $('cancelGroupModal').addEventListener('click',closeGroupPopup);
+    $('groupModalBackdrop').addEventListener('click',e=>{if(e.target===$('groupModalBackdrop'))closeGroupPopup();});
+    planFileInput.addEventListener('change',async(e)=>{try{if(e.target.files[0])await readPlanFile(e.target.files[0]);}catch(err){setStatus(err.message||'Erro ao ler o Plano Domínio.',true);showToast(err.message||'Erro ao ler o Plano Domínio.');}finally{planFileInput.value='';}});
+    $('planSheet').addEventListener('change',e=>{try{configurePlanSheet(e.target.value);}catch(err){setStatus(err.message||'Erro ao abrir a aba do plano.',true);}});
+    for(const id of ['planCode','planClass','planDescription','planThreshold'])$(id).addEventListener('change',updatePlanPreview);
+    const dropZone=$('dropZone');
+    dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag');});
+    dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag'));
+    dropZone.addEventListener('drop',async e=>{e.preventDefault();dropZone.classList.remove('drag');try{await readPdf(e.dataTransfer.files[0]);}catch(err){setStatus(err.message||'Erro ao ler PDF.',true);showToast(err.message||'Erro ao ler PDF.');}});
+    $('confirmImport').addEventListener('click',confirmImport);
+    const closeModal=()=> $('modalBackdrop').classList.remove('open');
+    const closePlanModal=()=> $('planModalBackdrop').classList.remove('open');
+    const closeTxtModal=()=> $('txtModalBackdrop').classList.remove('open');
+    const closeValidationModal=()=>{closeAdjustmentForm();$('validationModalBackdrop').classList.remove('open');};
+    $('closeModal').addEventListener('click',closeModal); $('cancelModal').addEventListener('click',closeModal);
+    $('modalBackdrop').addEventListener('click',e=>{if(e.target===$('modalBackdrop'))closeModal();});
+    $('confirmPlan').addEventListener('click',confirmPlan);
+    $('closePlanModal').addEventListener('click',closePlanModal); $('cancelPlanModal').addEventListener('click',closePlanModal);
+    $('planModalBackdrop').addEventListener('click',e=>{if(e.target===$('planModalBackdrop'))closePlanModal();});
+    $('closeTxtModal').addEventListener('click',closeTxtModal); $('cancelTxtModal').addEventListener('click',closeTxtModal);
+    $('txtModalBackdrop').addEventListener('click',e=>{if(e.target===$('txtModalBackdrop'))closeTxtModal();});
+    $('closeValidationModal').addEventListener('click',closeValidationModal); $('cancelValidationModal').addEventListener('click',closeValidationModal);
+    $('validationModalBackdrop').addEventListener('click',e=>{if(e.target===$('validationModalBackdrop'))closeValidationModal();});
+    $('openAdjustmentBtn').addEventListener('click',openAdjustmentForm);
+    $('cancelAdjustment').addEventListener('click',closeAdjustmentForm);
+    $('saveAdjustment').addEventListener('click',saveAdjustment);
+    $('adjustmentAmount').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveAdjustment();}});
+    $('txtCompanyId').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,14);updateTxtPreview();});
+    $('txtPostingDate').addEventListener('input',updateTxtPreview);
+    $('generateTxtBtn').addEventListener('click',handleGenerateTxt);
+    $('validateBtn').addEventListener('click',openValidationModal);
+    document.addEventListener('click',()=>closeColumnFilterMenu());
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closePlanModal();closeTxtModal();closeGroupPopup();closeValidationModal();}});
+    $('searchInput').addEventListener('input',()=>{state.page=0;renderTable();});
+    $('prevPage').addEventListener('click',()=>{if(state.page>0){state.page--;renderTable();}});
+    $('nextPage').addEventListener('click',()=>{state.page++;renderTable();});
+    $('accountsToggle').addEventListener('click',()=>{
+      const card=$('accountsCard'),collapsed=card.classList.toggle('collapsed');
+      $('accountsToggle').setAttribute('aria-expanded',String(!collapsed));
+      $('accountsToggle').title=collapsed?'Abrir Contas analíticas':'Recolher Contas analíticas';
+    });
+    $('exportBtn').addEventListener('click',openTxtModal);
+    $('sampleBtn').addEventListener('click',()=>showToast('Importe o PDF e, se quiser, o Excel do Plano Domínio. Revise os de-paras e edite os campos diretamente na tabela.'));
+
+    try { await pdfjsLib; } catch (error) { setStatus('Não foi possível carregar o leitor de PDF. Verifique sua conexão com a internet e recarregue a página.',true); }
+  </script>
+</body>
+</html>
